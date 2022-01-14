@@ -1,11 +1,16 @@
 // 导入路由
-import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  Redirect,
+} from "react-router-dom"
 
 // 导入页面组件
-import Login from './pages/Login';
-import Layout from './pages/Layout';
+import Login from "./pages/Login"
+import Layout from "./pages/Layout"
 
-import './App.scss';
+import "./App.scss"
 
 function App() {
   return (
@@ -18,7 +23,7 @@ function App() {
         </Switch>
       </div>
     </Router>
-  );
+  )
 }
 
-export default App;
+export default App
