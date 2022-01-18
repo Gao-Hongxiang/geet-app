@@ -5,7 +5,7 @@ import { customHistory } from "./history"
 //基本语法
 const http = axios.create({
   timeout: 5000,
-  baseURL: "http://toutiao.itheima.nev/v1_0",
+  baseURL: "http://toutiao.itheima.net/v1_0",
 })
 http.interceptors.request.use(
   (config) => {

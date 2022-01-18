@@ -1,10 +1,13 @@
 import type { Token } from "@/types/data"
 const TOKEN_KEY = "itcast_geek_mobile"
 // 获取token
-const getToken = (): Token =>
-  JSON.parse(
+const getToken = (): Token => {
+  const token = JSON.parse(
     localStorage.getItem(TOKEN_KEY) || '{"token":"","refresh_token":""}'
   )
+  // console.log(token)
+  return token
+}
 // 存储token
 const setToken = (token: Token) =>
   localStorage.setItem(TOKEN_KEY, JSON.stringify(token))
