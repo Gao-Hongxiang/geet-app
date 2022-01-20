@@ -9,7 +9,7 @@ import Home from "@/pages/Home"
 import Question from "@/pages/Question"
 import Video from "@/pages/Video"
 import Profile from "@/pages/Profile"
-
+import { useLocation, useHistory } from "react-router"
 const tabs = [
   { path: "/home/index", icon: "iconbtn_home", text: "首页" },
   { path: "/home/question", icon: "iconbtn_qa", text: "问答" },
@@ -18,6 +18,14 @@ const tabs = [
 ]
 
 const Layout = () => {
+  const history = useHistory()
+  const location = useLocation()
+  console.log(location)
+
+  const changeTabBar = (key: string) => {
+    history.push(key)
+  }
+
   return (
     <div className={styles.root}>
       {/* 二级嵌套路由 */}
@@ -34,7 +42,11 @@ const Layout = () => {
         <Profile></Profile>
       </Route>
 
-      <TabBar className="tab-bar">
+      <TabBar
+        className="tab-bar"
+        onChange={changeTabBar}
+        activeKey={location.pathname}
+      >
         {tabs.map((item) => (
           <TabBar.Item
             key={item.path}
