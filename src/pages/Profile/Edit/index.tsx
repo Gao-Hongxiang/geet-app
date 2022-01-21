@@ -2,25 +2,11 @@ import { Button, List, DatePicker, NavBar } from "antd-mobile"
 import classNames from "classnames"
 import { useHistory } from "react-router"
 import styles from "./index.module.scss"
-// import { useDispatch, useSelector } from "react-redux"
-// import { useEffect } from "react"
 import { getUserProfile } from "@/store/actions/profile"
-// import { RootState } from "@/types/store"
 import { useInitialState } from "@/utils/use-initial-state"
-import { UserProfile } from "@/types/data"
 const Item = List.Item
 const ProfileEdit = () => {
-  // const dispatch = useDispatch()
-  const { userprofile: profile } = useInitialState(
-    getUserProfile,
-    "profile"
-  ) as { userprofile: UserProfile }
-  // const profile = useSelector((state: RootState) => {
-  //   return state.profile.userprofile
-  // })
-  // useEffect(() => {
-  //   dispatch(getUserProfile())
-  // }, [dispatch])
+  const { userprofile: profile } = useInitialState(getUserProfile, "profile")
   const history = useHistory()
   return (
     <div className={styles.root}>
