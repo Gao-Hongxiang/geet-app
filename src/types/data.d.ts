@@ -9,10 +9,11 @@ export type LoginForm = {
   code: string
 }
 
-export type LoginResponse = {
+type ApiResponse<T> = {
   message: string
-  data: Token
+  data: T
 }
+export type LoginResponse = ApiResponse<Token>
 // ├─ id	string	必须		用户id
 // ├─ name	string	必须		用户名
 // ├─ photo	string	必须		用户头像
@@ -34,7 +35,14 @@ export type User = {
   fans_count: number
   like_count: number
 }
-export type UserResponse = {
-  message: string
-  data: User
+export type UserResponse = ApiResponse<User>
+export type UserProfile = {
+  id: string
+  photo: string
+  name: string
+  mobile: string
+  gender: number
+  birthday: string
+  intro?: string
 }
+export type UserProfileResponse = ApiResponse<UserProfile>

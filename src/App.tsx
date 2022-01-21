@@ -1,6 +1,6 @@
 // 导入路由
 import { Router, Route, Switch, Redirect } from "react-router-dom"
-
+import ProfileEdit from "@/pages/Profile/Edit"
 // 导入页面组件
 import Login from "./pages/Login"
 import Layout from "./pages/Layout"
@@ -16,6 +16,9 @@ function App() {
           <Route exact path="/" render={() => <Redirect to="/home" />} />;
           <Route path="/home" component={Layout} />
           <Route path="/login" component={Login} />
+          <Route path="/profile/edit">
+            <ProfileEdit />
+          </Route>
         </Switch>
       </div>
     </Router>

@@ -1,10 +1,12 @@
 import { ProfileAction } from "./../../types/store.d"
-import { User } from "@/types/data"
+import { User, UserProfile } from "@/types/data"
 type ProfileState = {
   user: User
+  userprofile: UserProfile
 }
 const initialState = {
   user: {},
+  userprofile: {},
 } as ProfileState
 export function profile(
   state = initialState,
@@ -13,6 +15,8 @@ export function profile(
   switch (action.type) {
     case "profile/getUser":
       return { ...state, user: action.payload }
+    case "profile/getUserProfile":
+      return { ...state, userprofile: action.payload }
 
     default:
       return { ...state }
