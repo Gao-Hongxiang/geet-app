@@ -1,25 +1,31 @@
 import { Link, useHistory } from "react-router-dom"
-
+import { useSelector, useDispatch } from "react-redux"
+import { RootState } from "@/types/store"
 import Icon from "@/components/Icon"
 import styles from "./index.module.scss"
-
+import { useEffect } from "react"
+import { getUser } from "@/store/actions/profile"
 const Profile = () => {
   const history = useHistory()
-
+  const dispatch = useDispatch()
+  const user = useSelector((state: RootState) => {
+    return state.profile.user
+  })
+  useEffect(() => {
+    dispatch(getUser())
+  }, [dispatch])
   return (
     <div className={styles.root}>
       <div className="profile">
         {/* 个人信息 */}
         <div className="user-info">
           <div className="avatar">
-            <img
-              src={"http://toutiao.itheima.net/images/user_head.jpg"}
-              alt=""
-            />
+            <img src={user.photo} alt="" />
           </div>
-          <div className="user-name">黑马先锋</div>
+          <div className="user-name">{user.name}</div>
           <Link to="/profile/edit">
-            个人信息 <Icon type="iconbtn_right" />
+            个人信息
+            <Icon type="iconbtn_right" />
           </Link>
         </div>
 
@@ -34,19 +40,19 @@ const Profile = () => {
         {/* 动态 - 对应的这一行 */}
         <div className="count-list">
           <div className="count-item">
-            <p>1</p>
+            <p>{user.art_count}</p>
             <p>动态</p>
           </div>
           <div className="count-item">
-            <p>9</p>
+            <p>{user.follow_count}</p>
             <p>关注</p>
           </div>
           <div className="count-item">
-            <p>99</p>
+            <p>{user.fans_count}</p>
             <p>粉丝</p>
           </div>
           <div className="count-item">
-            <p>200</p>
+            <p>{user.like_count}</p>
             <p>被赞</p>
           </div>
         </div>
