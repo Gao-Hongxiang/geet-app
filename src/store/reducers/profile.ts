@@ -17,7 +17,11 @@ export function profile(
       return { ...state, user: action.payload }
     case "profile/getUserProfile":
       return { ...state, userprofile: action.payload }
-
+    case "prifile/update":
+      return {
+        ...state,
+        userprofile: { ...state.userprofile, ...action.payloay },
+      }
     default:
       return { ...state }
   }

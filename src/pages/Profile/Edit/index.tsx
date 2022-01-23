@@ -1,13 +1,60 @@
-import { Button, List, DatePicker, NavBar } from "antd-mobile"
+import { Button, List, DatePicker, NavBar, Popup, Toast } from "antd-mobile"
 import classNames from "classnames"
 import { useHistory } from "react-router"
 import styles from "./index.module.scss"
-import { getUserProfile } from "@/store/actions/profile"
 import { useInitialState } from "@/utils/use-initial-state"
+import EditInput from "./components/EditInput"
+import { useDispatch } from "react-redux"
+import { getUpdataUserProfile, getUserProfile } from "@/store/actions/profile"
+import { useState } from "react"
 const Item = List.Item
+type InputPopup = {
+  type: "" | "intro" | "name"
+  value?: string
+  visible: boolean
+}
 const ProfileEdit = () => {
+  const dispatch = useDispatch()
+  // const [inputVisible, setInputVisuble] = useState(false)
+  const [inputPopup, setInputPopup] = useState<InputPopup>({
+    type: "",
+    value: "",
+    visible: false,
+  })
   const { userprofile: profile } = useInitialState(getUserProfile, "profile")
   const history = useHistory()
+  // const onInputHide = () => {
+  //   setInputVisuble(false)
+  // }
+  const onUpdateName = async (type: "name" | "intro", value: string) => {
+    await dispatch(getUpdataUserProfile({ [type]: value }))
+    Toast.show({
+      content: "更新成功",
+      duration: 1000,
+    })
+    // await dispatch(getUserProfile())
+  }
+  const onInputShow = () => {
+    setInputPopup({
+      type: "name",
+      value: profile.name,
+      visible: true,
+    })
+  }
+  const onInputHide = () => {
+    setInputPopup({
+      type: "",
+      value: "",
+      visible: false,
+    })
+  }
+  const onIntroShow = () => {
+    setInputPopup({
+      type: "intro",
+      value: profile.intro,
+      visible: true,
+    })
+  }
   return (
     <div className={styles.root}>
       <div className="content">
@@ -37,10 +84,11 @@ const ProfileEdit = () => {
             >
               头像
             </Item>
-            <Item arrow extra={profile.name}>
+            <Item arrow extra={profile.name} onClick={onInputShow}>
               昵称
             </Item>
             <Item
+              onClick={onIntroShow}
               arrow
               extra={
                 <span className={classNames("intro", "normal")}>
@@ -74,8 +122,16 @@ const ProfileEdit = () => {
           <Button className="btn">退出登录</Button>
         </div>
       </div>
+      {/* <Popup visible={inputPopup.visible} position="right" destroyOnClose> */}
+      <Popup visible={inputPopup.visible} position="right">
+        <EditInput
+          type={inputPopup.type}
+          value={inputPopup.value ?? ""}
+          onInputHide={onInputHide}
+          onUpdateName={onUpdateName}
+        ></EditInput>
+      </Popup>
     </div>
   )
 }
-
 export default ProfileEdit

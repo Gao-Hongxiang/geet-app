@@ -18,3 +18,7 @@ export type ProfileAction =
       type: "profile/getUserProfile"
       payload: UserProfile
     }
+  | {
+      type: "prifile/update"
+      payloay: Partial<UserProfile>
+    }

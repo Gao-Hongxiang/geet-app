@@ -1,4 +1,4 @@
-import { UserProfileResponse, UserResponse } from "@/types/data"
+import { UserProfile, UserProfileResponse, UserResponse } from "@/types/data"
 import { RootThunkAction } from "@/types/store"
 import { http } from "@/utils/http"
 
@@ -12,5 +12,14 @@ export const getUserProfile = (): RootThunkAction => {
   return async (dispatch) => {
     const res = (await http.get("/user/profile")) as UserProfileResponse
     dispatch({ type: "profile/getUserProfile", payload: res.data })
+  }
+}
+type CustomUser = Partial<UserProfile>
+export const getUpdataUserProfile = (
+  userProfile: CustomUser
+): RootThunkAction => {
+  return async (dispatch) => {
+    await http.patch("/user/profile", userProfile)
+    dispatch({ type: "prifile/update", payloay: userProfile })
   }
 }
