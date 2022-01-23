@@ -8,10 +8,16 @@ import { useDispatch } from "react-redux"
 import { getUpdataUserProfile, getUserProfile } from "@/store/actions/profile"
 import { useState } from "react"
 import EditList from "./components/EditList"
+import moment from "moment"
+
 const Item = List.Item
 type InputPopup = {
   type: "" | "intro" | "name"
   value?: string
+  visible: boolean
+}
+type ListPopup = {
+  type: "" | "gender" | "photo"
   visible: boolean
 }
 const ProfileEdit = () => {
@@ -22,19 +28,36 @@ const ProfileEdit = () => {
     value: "",
     visible: false,
   })
+  const [listPopup, setListPopup] = useState<ListPopup>({
+    type: "",
+    visible: false,
+  })
   const { userprofile: profile } = useInitialState(getUserProfile, "profile")
+  const [showBirthday, setShowBirthday] = useState(false)
+
+  const onBirthdayShow = () => {
+    setShowBirthday(true)
+  }
+  const onBirthdayHide = () => {
+    setShowBirthday(false)
+  }
   const history = useHistory()
   // const onInputHide = () => {
   //   setInputVisuble(false)
   // }
-  const onUpdateName = async (type: "name" | "intro", value: string) => {
+  const onUpdateName = async (
+    type: "name" | "intro" | "gender" | "photo" | "birthday",
+    value: string | number
+  ) => {
     await dispatch(getUpdataUserProfile({ [type]: value }))
     Toast.show({
       content: "更新成功",
       duration: 1000,
     })
+    onListPopupHide()
     // await dispatch(getUserProfile())
   }
+
   const onInputShow = () => {
     setInputPopup({
       type: "name",
@@ -56,6 +79,32 @@ const ProfileEdit = () => {
       visible: true,
     })
   }
+  const onGenderShow = () => {
+    setListPopup({
+      type: "gender",
+      visible: true,
+    })
+  }
+  const onListPopupHide = () => {
+    setListPopup({
+      type: "",
+      visible: false,
+    })
+  }
+  const onPhotoShow = () => {
+    setListPopup({
+      type: "photo",
+      visible: true,
+    })
+  }
+  const onUpdateBirthday = (value: Date) => {
+    console.log(value)
+    const birthday = moment(value).format("YYYY-MM-DD")
+    // const birthday = dayjs(value).format("YYYY-MM-DD")
+
+    onUpdateName("birthday", birthday)
+    onBirthdayHide()
+  }
   return (
     <div className={styles.root}>
       <div className="content">
@@ -76,6 +125,7 @@ const ProfileEdit = () => {
           <List className="profile-list">
             {/* 列表项 */}
             <Item
+              onClick={onPhotoShow}
               extra={
                 <span className="avatar-wrapper">
                   <img width={24} height={24} src={profile.photo} alt="" />
@@ -102,20 +152,26 @@ const ProfileEdit = () => {
           </List>
 
           <List className="profile-list">
-            <Item arrow extra={profile.gender === 0 ? "男" : "女"}>
+            <Item
+              arrow
+              extra={profile.gender === 0 ? "男" : "女"}
+              onClick={onGenderShow}
+            >
               性别
             </Item>
-            <Item arrow extra={profile.birthday}>
+            <Item arrow extra={profile.birthday} onClick={onBirthdayShow}>
               生日
             </Item>
           </List>
 
           <DatePicker
-            visible={false}
-            value={new Date()}
+            visible={showBirthday}
+            value={new Date(profile.birthday)}
+            onCancel={onBirthdayHide}
             title="选择年月日"
             min={new Date(1900, 0, 1, 0, 0, 0)}
             max={new Date()}
+            onConfirm={onUpdateBirthday}
           />
         </div>
 
@@ -132,8 +188,17 @@ const ProfileEdit = () => {
           onUpdateName={onUpdateName}
         ></EditInput>
       </Popup>
-      <Popup visible={true}>
-        <EditList />
+      <Popup
+        visible={listPopup.visible}
+        onMaskClick={onListPopupHide}
+        destroyOnClose
+      >
+        <EditList
+          onClose={onListPopupHide}
+          type={listPopup.type}
+          // onUpdateProfile 复用修改昵称或简介时的函数
+          onUpdateProfile={onUpdateName}
+        />
       </Popup>
     </div>
   )
