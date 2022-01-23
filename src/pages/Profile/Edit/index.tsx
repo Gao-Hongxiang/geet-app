@@ -7,6 +7,7 @@ import EditInput from "./components/EditInput"
 import { useDispatch } from "react-redux"
 import { getUpdataUserProfile, getUserProfile } from "@/store/actions/profile"
 import { useState } from "react"
+import EditList from "./components/EditList"
 const Item = List.Item
 type InputPopup = {
   type: "" | "intro" | "name"
@@ -130,6 +131,9 @@ const ProfileEdit = () => {
           onInputHide={onInputHide}
           onUpdateName={onUpdateName}
         ></EditInput>
+      </Popup>
+      <Popup visible={true}>
+        <EditList />
       </Popup>
     </div>
   )
