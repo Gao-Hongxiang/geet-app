@@ -5,8 +5,8 @@ type Props = {
   onUpdateProfile: (type: "gender" | "photo", value: string | number) => void
 }
 const genderList = [
-  { text: "男", value: "0" },
-  { text: "女", value: "1" },
+  { text: "男", value: 0 },
+  { text: "女", value: 1 },
 ]
 
 const photoList = [

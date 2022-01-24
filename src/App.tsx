@@ -8,6 +8,7 @@ import Layout from "./pages/Layout"
 import "./App.scss"
 
 import { customHistory } from "./utils/history"
+import Chat from "./pages/Profile/Chat"
 function App() {
   return (
     <Router history={customHistory}>
@@ -16,6 +17,7 @@ function App() {
           <Route exact path="/" render={() => <Redirect to="/home" />} />;
           <Route path="/home" component={Layout} />
           <Route path="/login" component={Login} />
+          <Route path="/chat" component={Chat} />
           <Route path="/profile/edit">
             <ProfileEdit />
           </Route>
