@@ -1,7 +1,9 @@
+import { setToken, clearToken } from "@/utils/auth"
 import store from "@/store"
 import axios from "axios"
 import { Toast } from "antd-mobile"
 import { customHistory } from "./history"
+import { AxiosError } from "axios"
 //基本语法
 const http = axios.create({
   timeout: 5000,
@@ -30,7 +32,7 @@ http.interceptors.response.use(
   (response) => {
     return response.data ? response.data : {}
   },
-  (error) => {
+  async (error: AxiosError) => {
     // 响应失败时，会执行此处的回调函数
     if (!error.response) {
       // 网路超时
@@ -42,18 +44,46 @@ http.interceptors.response.use(
     }
 
     if (error.response.status === 401) {
-      // token 过期，登录超时
-      Toast.show({
-        content: "登录超时，请重新登录",
-        duration: 1000,
-        afterClose: () => {
-          customHistory.push("/login", {
-            from: customHistory.location.pathname,
-          })
-          // 触发退出 action，将 token 等清除
-          // store.dispatch(logout())
-        },
-      })
+      try {
+        // token 过期，登录超时
+        let {
+          login: { refresh_token },
+        } = store.getState()
+        if (!refresh_token) {
+          await Promise.reject(error)
+        }
+        const {
+          data: {
+            data: { token },
+          },
+        } = await axios({
+          url: "http://toutiao.itheima.net/v1_0/authorizations",
+          method: "put",
+          headers: {
+            Authorization: `Bearer ${refresh_token}`,
+          },
+        })
+        const tokenobj = {
+          token,
+          refresh_token,
+        }
+        setToken(tokenobj)
+        store.dispatch({ type: "login/token", payload: tokenobj })
+
+        return http(error.config) //重新发起之前错误的请求
+      } catch (error) {
+        clearToken()
+        store.dispatch({ type: "login/logout" })
+        Toast.show({
+          content: "登录超时，请重新登录",
+          duration: 1000,
+          afterClose: () => {
+            customHistory.push("/login", {
+              from: customHistory.location.pathname,
+            })
+          },
+        })
+      }
     }
 
     return Promise.reject(error)

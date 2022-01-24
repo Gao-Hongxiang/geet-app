@@ -49,22 +49,9 @@ const Layout = () => {
         <Profile></Profile>
       </Route>
 
-      <TabBar
-        className="tab-bar"
-        onChange={changeTabBar}
-        activeKey={location.pathname}
-      >
+      <TabBar className="tab-bar" onChange={changeTabBar} activeKey={location.pathname}>
         {tabs.map((item) => (
-          <TabBar.Item
-            key={item.path}
-            icon={(active: boolean) => (
-              <Icon
-                type={active ? `${item.icon}_sel` : item.icon}
-                className="tab-bar-item-icon"
-              />
-            )}
-            title={item.text}
-          />
+          <TabBar.Item key={item.path} icon={(active: boolean) => <Icon type={active ? `${item.icon}_sel` : item.icon} className="tab-bar-item-icon" />} title={item.text} />
         ))}
       </TabBar>
     </div>

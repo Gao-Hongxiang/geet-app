@@ -2,13 +2,14 @@ import { Button, NavBar, Form, Input, Toast } from "antd-mobile"
 import type { LoginForm } from "@/types/data"
 import { loginAction, getCode } from "@/store/actions/login"
 import { useDispatch } from "react-redux"
-import { useHistory } from "react-router-dom"
+import { useHistory, useLocation } from "react-router-dom"
 import styles from "./index.module.scss"
 import { AxiosError } from "axios"
 import { useRef, useState, useEffect } from "react"
 import { InputRef } from "antd-mobile/es/components/input"
 
 const Login = () => {
+  const location = useLocation<{ from: string } | undefined>()
   // const timerRef = useRef(-1);
   const [timeLeft, setTimeLeft] = useState(0)
   const timerRef = useRef(-1)
@@ -16,7 +17,7 @@ const Login = () => {
   const [form] = Form.useForm()
   const dispatch = useDispatch()
   const history = useHistory()
-
+  // location.state.from
   const onGetCode = async () => {
     // 拿到手机号
     const mobile = (form.getFieldValue("mobile") ?? "") as string
@@ -63,10 +64,15 @@ const Login = () => {
     try {
       await dispatch(loginAction(values))
       Toast.show({
-        content: "登陆成功",
+        content: "登录成功",
         duration: 600,
         afterClose: () => {
-          history.replace("/home")
+          if (location.state) {
+            history.replace(location.state.from)
+            return
+          }
+
+          history.replace("/home/index")
         },
       })
     } catch (e) {
@@ -110,12 +116,7 @@ const Login = () => {
               },
             ]}
           >
-            <Input
-              ref={mobileRef}
-              placeholder="请输入手机号"
-              autoComplete="off"
-              maxLength={11}
-            />
+            <Input ref={mobileRef} placeholder="请输入手机号" autoComplete="off" maxLength={11} />
           </Form.Item>
 
           <Form.Item
@@ -123,10 +124,7 @@ const Login = () => {
             className="login-item"
             // validateTrigger="onBlur"
             extra={
-              <span
-                className="code-extra"
-                onClick={timeLeft === 0 ? onGetCode : undefined}
-              >
+              <span className="code-extra" onClick={timeLeft === 0 ? onGetCode : undefined}>
                 {timeLeft === 0 ? "发送验证码" : `${timeLeft}s后重新获取`}
               </span>
             }
@@ -138,11 +136,7 @@ const Login = () => {
               },
             ]}
           >
-            <Input
-              placeholder="请输入验证码"
-              autoComplete="off"
-              maxLength={6}
-            />
+            <Input placeholder="请输入验证码" autoComplete="off" maxLength={6} />
           </Form.Item>
 
           {/* noStyle 表示不提供 Form.Item 自带的样式 */}
@@ -165,18 +159,10 @@ const Login = () => {
               // )
 
               // 得到禁用状态
-              const disabled =
-                form.getFieldsError().filter((item) => item.errors.length > 0)
-                  .length > 0 || !form.isFieldsTouched(true)
+              const disabled = form.getFieldsError().filter((item) => item.errors.length > 0).length > 0 || !form.isFieldsTouched(true)
 
               return (
-                <Button
-                  disabled={disabled}
-                  block
-                  type="submit"
-                  color="primary"
-                  className="login-submit"
-                >
+                <Button disabled={disabled} block type="submit" color="primary" className="login-submit">
                   登 录
                 </Button>
               )
