@@ -1,4 +1,4 @@
-import { Button, List, DatePicker, NavBar, Popup, Toast } from "antd-mobile"
+import { Button, List, DatePicker, NavBar, Popup, Toast, Dialog } from "antd-mobile"
 import classNames from "classnames"
 import { useHistory } from "react-router"
 import styles from "./index.module.scss"
@@ -9,7 +9,7 @@ import { getUpdataUserProfile, getUserProfile } from "@/store/actions/profile"
 import { useState } from "react"
 import EditList from "./components/EditList"
 import moment from "moment"
-
+import { logout1 } from "@/store/actions/login"
 const Item = List.Item
 type InputPopup = {
   type: "" | "intro" | "name"
@@ -45,10 +45,7 @@ const ProfileEdit = () => {
   // const onInputHide = () => {
   //   setInputVisuble(false)
   // }
-  const onUpdateName = async (
-    type: "name" | "intro" | "gender" | "photo" | "birthday",
-    value: string | number
-  ) => {
+  const onUpdateName = async (type: "name" | "intro" | "gender" | "photo" | "birthday", value: string | number) => {
     await dispatch(getUpdataUserProfile({ [type]: value }))
     Toast.show({
       content: "更新成功",
@@ -105,6 +102,36 @@ const ProfileEdit = () => {
     onUpdateName("birthday", birthday)
     onBirthdayHide()
   }
+  const logout = () => {
+    const handler = Dialog.show({
+      title: "温馨提示",
+      content: "亲，您确定要退出吗？",
+      actions: [
+        [
+          {
+            key: "cancel",
+            text: "取消",
+            onClick: () => {
+              handler.close()
+            },
+          },
+          {
+            key: "confirm",
+            text: "退出",
+            style: {
+              color: "var(--adm-color-weak)",
+            },
+            onClick: () => {
+              dispatch(logout1())
+              handler.close()
+              history.replace("/login")
+            },
+          },
+        ],
+      ],
+    })
+  }
+
   return (
     <div className={styles.root}>
       <div className="content">
@@ -138,25 +165,13 @@ const ProfileEdit = () => {
             <Item arrow extra={profile.name} onClick={onInputShow}>
               昵称
             </Item>
-            <Item
-              onClick={onIntroShow}
-              arrow
-              extra={
-                <span className={classNames("intro", "normal")}>
-                  {profile.intro || "未填写"}
-                </span>
-              }
-            >
+            <Item onClick={onIntroShow} arrow extra={<span className={classNames("intro", "normal")}>{profile.intro || "未填写"}</span>}>
               简介
             </Item>
           </List>
 
           <List className="profile-list">
-            <Item
-              arrow
-              extra={profile.gender === 0 ? "男" : "女"}
-              onClick={onGenderShow}
-            >
+            <Item arrow extra={profile.gender === 0 ? "男" : "女"} onClick={onGenderShow}>
               性别
             </Item>
             <Item arrow extra={profile.birthday} onClick={onBirthdayShow}>
@@ -176,23 +191,16 @@ const ProfileEdit = () => {
         </div>
 
         <div className="logout">
-          <Button className="btn">退出登录</Button>
+          <Button className="btn" onClick={logout}>
+            退出登录
+          </Button>
         </div>
       </div>
       {/* <Popup visible={inputPopup.visible} position="right" destroyOnClose> */}
       <Popup visible={inputPopup.visible} position="right">
-        <EditInput
-          type={inputPopup.type}
-          value={inputPopup.value ?? ""}
-          onInputHide={onInputHide}
-          onUpdateName={onUpdateName}
-        ></EditInput>
+        <EditInput type={inputPopup.type} value={inputPopup.value ?? ""} onInputHide={onInputHide} onUpdateName={onUpdateName}></EditInput>
       </Popup>
-      <Popup
-        visible={listPopup.visible}
-        onMaskClick={onListPopupHide}
-        destroyOnClose
-      >
+      <Popup visible={listPopup.visible} onMaskClick={onListPopupHide} destroyOnClose>
         <EditList
           onClose={onListPopupHide}
           type={listPopup.type}

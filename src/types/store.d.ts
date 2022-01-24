@@ -5,10 +5,14 @@ export type RootState = ReturnType<typeof store.getState>
 export type RootAction = LoginAction | ProfileAction
 export type RootThunkAction = ThunkAction<void, RootState, unknown, RootAction>
 //登录action类型
-export type LoginAction = {
-  type: "login/token"
-  payload: Token
-}
+export type LoginAction =
+  | {
+      type: "login/token"
+      payload: Token
+    }
+  | {
+      type: "login/logout"
+    }
 export type ProfileAction =
   | {
       type: "profile/getUser"
