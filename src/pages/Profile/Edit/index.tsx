@@ -6,7 +6,7 @@ import { useInitialState } from "@/utils/use-initial-state"
 import EditInput from "./components/EditInput"
 import { useDispatch } from "react-redux"
 import { getUpdataUserProfile, getUserProfile } from "@/store/actions/profile"
-import { useState } from "react"
+import { useRef, useState } from "react"
 import EditList from "./components/EditList"
 import moment from "moment"
 import { logout1 } from "@/store/actions/login"
@@ -21,6 +21,7 @@ type ListPopup = {
   visible: boolean
 }
 const ProfileEdit = () => {
+  const fileRef = useRef<HTMLInputElement>(null)
   const dispatch = useDispatch()
   // const [inputVisible, setInputVisuble] = useState(false)
   const [inputPopup, setInputPopup] = useState<InputPopup>({
@@ -46,12 +47,18 @@ const ProfileEdit = () => {
   //   setInputVisuble(false)
   // }
   const onUpdateName = async (type: "name" | "intro" | "gender" | "photo" | "birthday", value: string | number) => {
-    await dispatch(getUpdataUserProfile({ [type]: value }))
-    Toast.show({
-      content: "更新成功",
-      duration: 1000,
-    })
-    onListPopupHide()
+    if (type === "photo") {
+      fileRef.current?.click()
+    } else {
+      // ... 原来的逻辑
+      await dispatch(getUpdataUserProfile({ [type]: value }))
+      Toast.show({
+        content: "更新成功",
+        duration: 1000,
+      })
+      onListPopupHide()
+    }
+
     // await dispatch(getUserProfile())
   }
 
@@ -101,6 +108,12 @@ const ProfileEdit = () => {
 
     onUpdateName("birthday", birthday)
     onBirthdayHide()
+  }
+  const onChangePhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const photoData = new FormData()
+    photoData.append("photo", file)
   }
   const logout = () => {
     const handler = Dialog.show({
@@ -178,7 +191,7 @@ const ProfileEdit = () => {
               生日
             </Item>
           </List>
-
+          <input type="file" hidden onChange={onChangePhoto} />
           <DatePicker
             visible={showBirthday}
             value={new Date(profile.birthday)}
