@@ -1,8 +1,9 @@
+import { Articles, Channel } from "./data.d"
 import { User, Token, UserProfile } from "./data"
 import store from "@/store"
 import { ThunkAction } from "redux-thunk"
 export type RootState = ReturnType<typeof store.getState>
-export type RootAction = LoginAction | ProfileAction
+export type RootAction = LoginAction | ProfileAction | HomeAction
 export type RootThunkAction = ThunkAction<void, RootState, unknown, RootAction>
 //登录action类型
 export type LoginAction =
@@ -25,4 +26,17 @@ export type ProfileAction =
   | {
       type: "prifile/update"
       payloay: Partial<UserProfile>
+    }
+
+export type HomeAction =
+  | {
+      type: "home/getUserChannels"
+      payload: Channel[]
+    }
+  | {
+      type: "home/getChannelArticles"
+      payload: {
+        data: Articles
+        channelId: number
+      }
     }

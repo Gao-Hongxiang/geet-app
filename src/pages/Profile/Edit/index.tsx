@@ -102,7 +102,7 @@ const ProfileEdit = () => {
     })
   }
   const onUpdateBirthday = (value: Date) => {
-    console.log(value)
+    // console.log(value)
     const birthday = moment(value).format("YYYY-MM-DD")
     // const birthday = dayjs(value).format("YYYY-MM-DD")
 

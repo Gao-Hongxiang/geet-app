@@ -11,7 +11,7 @@ export const loginAction = (LoginParam: LoginForm): RootThunkAction => {
   // }
   return async (dispatch) => {
     const res = (await http.post("/authorizations", LoginParam)) as LoginResponse
-    console.log(res)
+    // console.log(res)
 
     const token = res.data
     setToken(token)

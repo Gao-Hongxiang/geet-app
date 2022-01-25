@@ -86,7 +86,7 @@ const Login = () => {
 
   return (
     <div className={styles.root}>
-      <NavBar onBack={() => history.replace("/home")}></NavBar>
+      <NavBar onBack={() => history.replace("/home/index")}></NavBar>
 
       <div className="login-form">
         <h2 className="title">账号登录</h2>
@@ -116,7 +116,7 @@ const Login = () => {
               },
             ]}
           >
-            <Input ref={mobileRef} placeholder="请输入手机号" autoComplete="off" maxLength={11} />
+            <Input ref={mobileRef} placeholder="请输入手机号" value="13111111111" autoComplete="off" maxLength={11} />
           </Form.Item>
 
           <Form.Item

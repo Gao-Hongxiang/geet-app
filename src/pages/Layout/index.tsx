@@ -20,7 +20,7 @@ const tabs = [
 const Layout = () => {
   const history = useHistory()
   const location = useLocation()
-  console.log(location)
+  // console.log(location)
 
   const changeTabBar = (key: string) => {
     history.push(key)

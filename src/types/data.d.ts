@@ -46,3 +46,46 @@ export type UserProfile = {
   intro?: string
 }
 export type UserProfileResponse = ApiResponse<UserProfile>
+
+//频道类型
+
+export type Channel = {
+  id: number
+  name: string
+}
+//redux存储结构
+export type UserChannel = {
+  channels: Channel[]
+}
+//respose响应数据结构
+
+export type UserChannelResponse = ApiResponse<UserChannel>
+// ├─ pre_timestamp	integer	必须		请求前一页历史数据的时间戳
+// ├─ results	object []	必须
+// item 类型: object
+
+// ├─ art_id	string	必须		文章id
+// ├─ title	string	必须		文章标题
+// ├─ aut_id	string	必须		作者id
+// ├─ aut_name	string	必须		作者名称
+// ├─ comm_count	string	必须		评论数量
+// ├─ pubdate	string	必须		发布时间
+// ├─ cover	object	必须		封面
+// ├─ type	string	必须		封面类型，0-无封面，1-1张封面图片，3-3张封面
+// ├─ images	string	必须		封面图片
+export type Articles = {
+  pre_timestamp: string
+  results: {
+    art_id: string
+    title: string
+    aut_name: string
+    aut_id: string
+    comm_count: number
+    pubdate: string
+    cover: {
+      type: number
+      images: string[]
+    }
+  }[]
+}
+export type ArticlesResponse = ApiResponse<Articles>
