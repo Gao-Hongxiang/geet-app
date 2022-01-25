@@ -9,7 +9,7 @@ import Home from "@/pages/Home"
 import Question from "@/pages/Question"
 import Video from "@/pages/Video"
 import Profile from "@/pages/Profile"
-import { useLocation, useHistory, Redirect } from "react-router"
+import { useLocation, useHistory } from "react-router"
 const tabs = [
   { path: "/home/index", icon: "iconbtn_home", text: "首页" },
   { path: "/home/question", icon: "iconbtn_qa", text: "问答" },
@@ -29,13 +29,13 @@ const Layout = () => {
   return (
     <div className={styles.root}>
       {/* 二级嵌套路由 */}
-      <Route
+      {/* <Route
         exact
         path="/home"
         render={() => {
           return <Redirect to="/home/index"></Redirect>
         }}
-      />
+      /> */}
       <Route exact path="/home/index">
         <Home></Home>
       </Route>

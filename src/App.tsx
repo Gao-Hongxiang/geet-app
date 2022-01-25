@@ -15,7 +15,7 @@ function App() {
     <Router history={customHistory}>
       <div className="app">
         <Switch>
-          <Route exact path="/" render={() => <Redirect to="/home" />} />;
+          <Route exact path="/" render={() => <Redirect to="/home/index" />} />;
           <Route path="/home" component={Layout} />
           <Route path="/login" component={Login} />
           <Route path="/chat" component={Chat} />
