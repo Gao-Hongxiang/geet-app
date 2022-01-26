@@ -5,11 +5,10 @@ import ProfileEdit from "@/pages/Profile/Edit"
 // 导入页面组件
 import Login from "./pages/Login"
 import Layout from "./pages/Layout"
-
-import "./App.scss"
-
 import { customHistory } from "./utils/history"
 import Chat from "./pages/Profile/Chat"
+import Article from "./pages/Article"
+import "./App.scss"
 function App() {
   return (
     <Router history={customHistory}>
@@ -19,6 +18,7 @@ function App() {
           <Route path="/home" component={Layout} />
           <Route path="/login" component={Login} />
           <Route path="/chat" component={Chat} />
+          <Route path="/articles/:id" component={Article} />
           <AuthRoute path="/profile/edit">
             <ProfileEdit />
           </AuthRoute>

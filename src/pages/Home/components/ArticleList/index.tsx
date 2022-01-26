@@ -4,11 +4,13 @@ import styles from "./index.module.scss"
 import { useDispatch, useSelector } from "react-redux"
 import { getArticleList } from "@/store/actions/home"
 import { RootState } from "@/types/store"
+import { useHistory } from "react-router-dom"
 type Props = {
   channelId: number
 }
 
 const ArticleList = ({ channelId }: Props) => {
+  const history = useHistory()
   const articles = useSelector((state: RootState) => {
     return state.home.channelArticles
   })
@@ -35,7 +37,7 @@ const ArticleList = ({ channelId }: Props) => {
       <PullToRefresh onRefresh={onRefresh}>
         {results.map((item, index) => {
           return (
-            <div className="article-item" key={index}>
+            <div className="article-item" key={index} onClick={() => history.push(`/articles/${item.art_id}`)}>
               <ArticleItem {...item} />
             </div>
           )
