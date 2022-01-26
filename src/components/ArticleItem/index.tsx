@@ -3,7 +3,15 @@ import classnames from "classnames"
 import Icon from "@/components/Icon"
 
 import styles from "./index.module.scss"
-
+import dayjs from "dayjs"
+// 相对时间插件
+import relativeTime from "dayjs/plugin/relativeTime"
+// 国际化 - 中文
+import "dayjs/locale/zh-cn"
+// 启用相对时间
+dayjs.extend(relativeTime)
+// 启用中文
+dayjs.locale("zh-cn")
 type Props = {
   art_id: string
   title: string
@@ -46,7 +54,7 @@ const ArticleItem = ({ art_id, title, aut_name, aut_id, comm_count, pubdate, cov
       <div className={classnames("article-info", type === 0 && "none-mt")}>
         <span>{aut_name}</span>
         <span>{comm_count} 评论</span>
-        <span>{pubdate}</span>
+        <span>{dayjs().from(dayjs(pubdate))}</span>
         <span className="close">
           <Icon type="iconbtn_essay_close" />
         </span>
