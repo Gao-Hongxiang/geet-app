@@ -1,5 +1,5 @@
 import ArticleItem from "@/components/ArticleItem"
-import { InfiniteScroll } from "antd-mobile"
+import { InfiniteScroll, PullToRefresh } from "antd-mobile"
 import styles from "./index.module.scss"
 import { useDispatch, useSelector } from "react-redux"
 import { getArticleList } from "@/store/actions/home"
@@ -23,19 +23,25 @@ const ArticleList = ({ channelId }: Props) => {
   const hasMore = !!pre_timestamp
 
   async function loadMore() {
-    await dispatch(getArticleList(channelId, pre_timestamp))
+    await dispatch(getArticleList(channelId, pre_timestamp, "append"))
   }
+  const onRefresh = async () => {
+    await dispatch(getArticleList(channelId, Date.now() + "", "replace"))
+  }
+
   return (
     <div className={styles.root}>
       {/* 文章列表中的每一项 */}
-      {results.map((item, index) => {
-        return (
-          <div className="article-item" key={index}>
-            <ArticleItem {...item} />
-          </div>
-        )
-      })}
-      <InfiniteScroll loadMore={loadMore} hasMore={hasMore} />
+      <PullToRefresh onRefresh={onRefresh}>
+        {results.map((item, index) => {
+          return (
+            <div className="article-item" key={index}>
+              <ArticleItem {...item} />
+            </div>
+          )
+        })}
+        <InfiniteScroll loadMore={loadMore} hasMore={hasMore} />
+      </PullToRefresh>
     </div>
   )
 }

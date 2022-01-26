@@ -19,11 +19,12 @@ export default function Home(state = initialState, action: HomeAction) {
       const {
         data: { pre_timestamp, results },
         channelId,
+        actionType,
       } = action.payload
       const preArticles = state.channelArticles[channelId] ? state.channelArticles[channelId].results : []
       return {
         ...state,
-        channelArticles: { ...state.channelArticles, [channelId]: { pre_timestamp, results: [...preArticles, ...results] } },
+        channelArticles: { ...state.channelArticles, [channelId]: { pre_timestamp, results: actionType === "append" ? [...preArticles, ...results] : [...results] } },
       }
     default:
       return state

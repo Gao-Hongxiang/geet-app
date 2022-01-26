@@ -38,5 +38,6 @@ export type HomeAction =
       payload: {
         data: Articles
         channelId: number
+        actionType: "append" | "replace"
       }
     }

@@ -31,7 +31,7 @@ export const getUserChannel = (): RootThunkAction => {
     dispatch({ type: "home/getUserChannels", payload: useChannels })
   }
 }
-export const getArticleList = (channel_id: number, timestamp: string): RootThunkAction => {
+export const getArticleList = (channel_id: number, timestamp: string, type: "append" | "replace"): RootThunkAction => {
   return async (dispatch) => {
     const res = (await http.get("/articles", {
       params: {
@@ -39,6 +39,6 @@ export const getArticleList = (channel_id: number, timestamp: string): RootThunk
         timestamp,
       },
     })) as ArticlesResponse
-    dispatch({ type: "home/getChannelArticles", payload: { data: res.data, channelId: channel_id } })
+    dispatch({ type: "home/getChannelArticles", payload: { data: res.data, channelId: channel_id, actionType: type } })
   }
 }
