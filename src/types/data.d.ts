@@ -89,3 +89,30 @@ export type Articles = {
   }[]
 }
 export type ArticlesResponse = ApiResponse<Articles>
+// ├─ art_id	string	必须		文章ID
+// ├─ title	string	必须		文章标题
+// ├─ pubdate	string	必须		发布日期
+// ├─ aut_id	string	必须		作者id
+// ├─ aut_name	string	必须		作者名
+// ├─ aut_photo	string	必须		作者头像url 无图片，默认为null
+// ├─ is_followed	boolean	必须		是否关注了作者
+// ├─ attitude	integer	必须		用户对文章的态度, -1: 无态度，0-不喜欢，1-点赞
+// ├─ content	string	必须		文章内容
+// ├─ is_collected	boolean	必须		是否收藏了文章
+export type ArticleInfo = {
+  art_id: string
+  title: string
+  pubdate: string
+  aut_id: string
+  aut_name: string
+  aut_photo: string
+  is_followed: boolean
+  attitude: number
+  content: string
+  is_collected: boolean
+  comm_count: number
+  read_count: numbner
+  like_count: number
+}
+
+export type ArticleInfoResponse = ApiResponse<ArticleInfo>
