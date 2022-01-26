@@ -1,25 +1,29 @@
 import ArticleItem from "@/components/ArticleItem"
 import { InfiniteScroll } from "antd-mobile"
 import styles from "./index.module.scss"
-import { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { getArticleList } from "@/store/actions/home"
 import { RootState } from "@/types/store"
 type Props = {
   channelId: number
 }
+
 const ArticleList = ({ channelId }: Props) => {
   const articles = useSelector((state: RootState) => {
     return state.home.channelArticles
   })
-  const { results } = articles[channelId] ?? {
+
+  const { results, pre_timestamp } = articles[channelId] ?? {
     results: [],
+    pre_timestamp: Date.now() + "",
   }
+
   const dispatch = useDispatch()
-  const [hasMore, setHasMore] = useState(true)
+
+  const hasMore = !!pre_timestamp
+
   async function loadMore() {
-    await dispatch(getArticleList(channelId, Date.now() + ""))
-    setHasMore(true)
+    await dispatch(getArticleList(channelId, pre_timestamp))
   }
   return (
     <div className={styles.root}>
