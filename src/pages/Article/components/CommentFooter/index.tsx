@@ -2,12 +2,14 @@ import Icon from "@/components/Icon"
 import styles from "./index.module.scss"
 
 type Props = {
+  attitude: number
+  is_collected: boolean
   // normal 普通评论
   // reply 回复评论
   type?: "normal" | "reply"
 }
 
-const CommentFooter = ({ type = "normal" }: Props) => {
+const CommentFooter = ({ type = "normal", attitude, is_collected }: Props) => {
   return (
     <div className={styles.root}>
       <div className="input-btn">
@@ -23,11 +25,11 @@ const CommentFooter = ({ type = "normal" }: Props) => {
             {!!1 && <span className="bage">{1}</span>}
           </div>
           <div className="action-item">
-            <Icon type={true ? "iconbtn_like_sel" : "iconbtn_like2"} />
+            <Icon type={!!attitude ? "iconbtn_like_sel" : "iconbtn_like2"} />
             <p>点赞</p>
           </div>
           <div className="action-item">
-            <Icon type={true ? "iconbtn_collect_sel" : "iconbtn_collect"} />
+            <Icon type={is_collected ? "iconbtn_collect_sel" : "iconbtn_collect"} />
             <p>收藏</p>
           </div>
         </>
@@ -35,7 +37,7 @@ const CommentFooter = ({ type = "normal" }: Props) => {
 
       {type === "reply" && (
         <div className="action-item">
-          <Icon type={true ? "iconbtn_like_sel" : "iconbtn_like2"} />
+          <Icon type={attitude ? "iconbtn_like_sel" : "iconbtn_like2"} />
           <p>点赞</p>
         </div>
       )}

@@ -2,7 +2,8 @@ import { NavBar, InfiniteScroll } from "antd-mobile"
 import { useHistory } from "react-router-dom"
 import classNames from "classnames"
 import styles from "./index.module.scss"
-
+import DOMPurify from "dompurify"
+import ContentLoader from "react-content-loader"
 import Icon from "@/components/Icon"
 import CommentItem from "./components/CommentItem"
 import CommentFooter from "./components/CommentFooter"
@@ -12,12 +13,44 @@ import { useParams } from "react-router"
 import dayjs from "dayjs"
 // 导入本地化格式插件
 import localizedFormat from "dayjs/plugin/localizedFormat"
+
+import highlight from "highlight.js"
+import "highlight.js/styles/vs2015.css"
+import { useEffect } from "react"
+
 dayjs.extend(localizedFormat)
 const Article = () => {
   const params = useParams<{ id: string }>()
   const getArticleInfoFn = () => {
     return getArticleInfo(params.id)
   }
+
+  // 文章详情 代码内容 高亮
+  useEffect(() => {
+    const dgHtmlDOM = document.querySelector(".dg-html")
+    const codes = dgHtmlDOM?.querySelectorAll<HTMLElement>("pre code")
+    // console.log(codes)
+    if (codes && codes.length > 0) {
+      codes.forEach((el) => {
+        // 让每个 code 内容实现代码高亮
+        highlight.highlightElement(el)
+      })
+      return
+    }
+
+    highlight.configure({
+      // 忽略警告
+      ignoreUnescapedHTML: true,
+    })
+
+    // 直接找到所有的 pre 标签
+    const pres = dgHtmlDOM?.querySelectorAll("pre")
+    if (pres && pres.length > 0) {
+      pres.forEach((el) => {
+        highlight.highlightElement(el)
+      })
+    }
+  }, [])
 
   // ├─ art_id	string	必须		文章ID
   // ├─ title	string	必须		文章标题
@@ -28,9 +61,8 @@ const Article = () => {
   // ├─ is_followed	boolean	必须		是否关注了作者
   // ├─ attitude	integer	必须		用户对文章的态度, -1: 无态度，0-不喜欢，1-点赞
   // ├─ content	string	必须		文章内容
-  // ├─ is_collected	boolean	必须		是否收藏了文章
   const {
-    detail: { art_id, title, pubdate, aut_id, content, aut_name, aut_photo, is_followed, is_collected, attitude, comm_count, read_count, like_count },
+    detail: { art_id, title, pubdate, content, aut_name, aut_photo, is_followed, is_collected, attitude, comm_count, read_count, like_count },
   } = useInitialState(getArticleInfoFn, "article")
 
   const history = useHistory()
@@ -61,8 +93,13 @@ const Article = () => {
           </div>
 
           <div className="content">
-            <div className="content-html dg-html" />
-            <div className="date">发布文章时间：{dayjs(pubdate).locale("zh-cn").format("LL")}</div>
+            <div
+              className="content-html dg-html"
+              dangerouslySetInnerHTML={{
+                __html: DOMPurify.sanitize(content),
+              }}
+            />
+            ;<div className="date">发布文章时间：{dayjs(pubdate).locale("zh-cn").format("LL")}</div>
           </div>
         </div>
 
@@ -81,7 +118,26 @@ const Article = () => {
       </div>
     )
   }
+  console.log(!art_id)
 
+  if (!art_id) {
+    return (
+      // 根据当前页面结构，设计好的 loading 效果
+      <ContentLoader speed={2} width={375} height={230} viewBox="0 0 375 230" backgroundColor="#f3f3f3" foregroundColor="#ecebeb">
+        <rect x="16" y="8" rx="3" ry="3" width="340" height="10" />
+        <rect x="16" y="26" rx="0" ry="0" width="70" height="6" />
+        <rect x="96" y="26" rx="0" ry="0" width="50" height="6" />
+        <rect x="156" y="26" rx="0" ry="0" width="50" height="6" />
+        <circle cx="33" cy="69" r="17" />
+        <rect x="60" y="65" rx="0" ry="0" width="45" height="6" />
+        <rect x="304" y="65" rx="0" ry="0" width="52" height="6" />
+        <rect x="16" y="114" rx="0" ry="0" width="340" height="15" />
+        <rect x="263" y="208" rx="0" ry="0" width="94" height="19" />
+        <rect x="16" y="141" rx="0" ry="0" width="340" height="15" />
+        <rect x="16" y="166" rx="0" ry="0" width="340" height="15" />
+      </ContentLoader>
+    )
+  }
   return (
     <div className={styles.root}>
       <div className="root-wrapper">
@@ -105,7 +161,7 @@ const Article = () => {
         {renderArticle()}
 
         {/* 底部评论栏 */}
-        <CommentFooter />
+        <CommentFooter attitude={attitude} is_collected={is_collected} />
       </div>
     </div>
   )
