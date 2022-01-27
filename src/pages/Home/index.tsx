@@ -21,7 +21,7 @@ const Home = () => {
           })}
         </Tabs>
       )}
-      <div className="tab s-opration">
+      <div className="tabs-opration">
         <Icon type="iconbtn_search" />
         <Icon type="iconbtn_channel" />
       </div>

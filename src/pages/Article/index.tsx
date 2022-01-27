@@ -118,7 +118,6 @@ const Article = () => {
       </div>
     )
   }
-  console.log(!art_id)
 
   if (!art_id) {
     return (
