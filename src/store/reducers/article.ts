@@ -20,14 +20,14 @@ export default function article(state = initialState, action: ArticleAction) {
       // end_id: string | null;
       // last_id: string | null;
       // results: ArtComment[];
-      const { total_count, end_id, last_id, results } = action.payload
+      const { total_count, end_id, last_id, results, actionType } = action.payload
       return {
         ...state,
         comment: {
           total_count,
           end_id,
           last_id,
-          results: false ? results : [...state.comment.results, ...results],
+          results: actionType === "replace" ? results : [...state.comment.results, ...results],
         },
       }
     default:

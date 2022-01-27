@@ -17,6 +17,7 @@ import localizedFormat from "dayjs/plugin/localizedFormat"
 import highlight from "highlight.js"
 import "highlight.js/styles/vs2015.css"
 import { useEffect } from "react"
+import NoneComment from "./components/NoneComment"
 // import { useDispatch } from "react-redux"
 enum CommentType {
   Article = "a",
@@ -67,10 +68,9 @@ const Article = () => {
   // ├─ is_followed	boolean	必须		是否关注了作者
   // ├─ attitude	integer	必须		用户对文章的态度, -1: 无态度，0-不喜欢，1-点赞
   // ├─ content	string	必须		文章内容
-  const {
-    detail: { art_id, title, pubdate, content, aut_name, aut_photo, is_followed, is_collected, attitude, comm_count, read_count, like_count },
-  } = useInitialState(getArticleInfoFn, "article")
-
+  const { detail } = useInitialState(getArticleInfoFn, "article")
+  console.log("detail", detail)
+  const { art_id, title, pubdate, content, aut_name, aut_photo, is_followed, is_collected, attitude, comm_count, read_count, like_count } = detail
   const { comment } = useInitialState(() => {
     return getArticleComment(CommentType.Article, params.id, null, "replace")
   }, "article")
@@ -118,15 +118,19 @@ const Article = () => {
 
         <div className="comment">
           <div className="comment-header">
-            <span>全部评论（10）</span>
+            <span>全部评论（{comm_count}）</span>
             <span>{like_count} 点赞</span>
           </div>
-
-          <div className="comment-list">
-            <CommentItem />
-
-            <InfiniteScroll hasMore={false} loadMore={loadMoreComments} />
-          </div>
+          {comment.results.length > 0 ? (
+            <div className="comment-list">
+              {comment.results.map((item, index) => {
+                return <CommentItem {...item} key={index} />
+              })}
+              <InfiniteScroll hasMore={false} loadMore={loadMoreComments} />
+            </div>
+          ) : (
+            <NoneComment />
+          )}
         </div>
       </div>
     )
