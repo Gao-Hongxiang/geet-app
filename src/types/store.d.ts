@@ -1,3 +1,4 @@
+import { ArticleComment } from "@/types/data.d"
 import { ArticleInfo, Articles, Channel } from "./data.d"
 import { User, Token, UserProfile } from "./data"
 import store from "@/store"
@@ -42,7 +43,12 @@ export type HomeAction =
       }
     }
 
-export type ArticleAction = {
-  type: "article/get"
-  payload: ArticleInfo
-}
+export type ArticleAction =
+  | {
+      type: "article/get"
+      payload: ArticleInfo
+    }
+  | {
+      type: "article/getArticleComments"
+      payload: ArticleComment & { actionType: "append" | "replace" }
+    }

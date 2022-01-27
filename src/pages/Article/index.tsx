@@ -8,7 +8,7 @@ import Icon from "@/components/Icon"
 import CommentItem from "./components/CommentItem"
 import CommentFooter from "./components/CommentFooter"
 import { useInitialState } from "@/utils/use-initial-state"
-import { getArticleInfo } from "@/store/actions/article"
+import { getArticleInfo, getArticleComment } from "@/store/actions/article"
 import { useParams } from "react-router"
 import dayjs from "dayjs"
 // 导入本地化格式插件
@@ -17,9 +17,15 @@ import localizedFormat from "dayjs/plugin/localizedFormat"
 import highlight from "highlight.js"
 import "highlight.js/styles/vs2015.css"
 import { useEffect } from "react"
+// import { useDispatch } from "react-redux"
+enum CommentType {
+  Article = "a",
+  Comment = "c",
+}
 
 dayjs.extend(localizedFormat)
 const Article = () => {
+  // const dispatch = useDispatch()
   const params = useParams<{ id: string }>()
   const getArticleInfoFn = () => {
     return getArticleInfo(params.id)
@@ -65,7 +71,14 @@ const Article = () => {
     detail: { art_id, title, pubdate, content, aut_name, aut_photo, is_followed, is_collected, attitude, comm_count, read_count, like_count },
   } = useInitialState(getArticleInfoFn, "article")
 
+  const { comment } = useInitialState(() => {
+    return getArticleComment(CommentType.Article, params.id, null, "replace")
+  }, "article")
+  console.log("comment", comment)
   const history = useHistory()
+  // useEffect(() => {
+  //   dispatch(getArticleComment(CommentType.Article, params.id, null, "replace"))
+  // }, [dispatch, params.id])
 
   const loadMoreComments = async () => {
     console.log("加载更多评论")

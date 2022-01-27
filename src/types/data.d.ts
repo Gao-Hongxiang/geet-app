@@ -116,3 +116,42 @@ export type ArticleInfo = {
 }
 
 export type ArticleInfoResponse = ApiResponse<ArticleInfo>
+
+// data	object	必须
+// ├─ total_count	integer	必须		该文章的评论总数 或 该评论的回复总数
+// ├─ end_id	string	必须		所有评论或回复的最后一个id（截止offset值，小于此值的offset可以不用发送请求获取评论数据，已经没有数据），若无评论或回复数据，则值为NULL
+// ├─ last_id	string	必须		本次返回结果的最后一个评论id，作为请求下一页数据的offset参数，若本次无具体数据，则值为NULL
+// ├─ results	object []	必须		评论或回复的内容
+// item 类型: object
+
+// ├─ com_id	string	必须		评论或回复id
+// ├─ aut_id	string	必须		评论或回复的用户id
+// ├─ aut_name	string	必须		用户名称
+// ├─ aut_photo	string	必须		用户头像url
+// ├─ like_count	integer	必须		点赞数量
+// ├─ reply_count	integer	必须		回复数量
+// ├─ pubdate	string	必须		创建时间
+// ├─ content	string	必须		评论或回复内容
+// ├─ is_liking	boolean	必须		当前用户是否点赞
+
+// 评论项的类型
+export type ArtComment = {
+  com_id: string
+  aut_id: string
+  aut_name: string
+  aut_photo: string
+  like_count: number
+  reply_count: number
+  pubdate: string
+  content: string
+  is_liking: boolean
+  is_followed: boolean
+}
+// 文章评论的类型
+export type ArticleComment = {
+  total_count: number
+  end_id: string | null
+  last_id: string | null
+  results: ArtComment[]
+}
+export type ArticleCommentResponse = ApiResponse<ArticleComment>
