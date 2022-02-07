@@ -103,7 +103,7 @@ const Article = () => {
   // }, [dispatch, params.id])
 
   const loadMoreComments = async () => {
-    console.log("加载更多评论")
+    await dispatch(getArticleComment(CommentType.Article, params.id, comment.last_id, "append"))
   }
 
   const onScrollTop = () => {
@@ -154,7 +154,7 @@ const Article = () => {
 
         <div className="comment">
           <div className="comment-header">
-            <span>全部评论（{comm_count}）</span>
+            <span>全部评论（{comment.total_count}）</span>
             <span>{like_count} 点赞</span>
           </div>
           {comment.results.length > 0 ? (
@@ -162,7 +162,7 @@ const Article = () => {
               {comment.results.map((item, index) => {
                 return <CommentItem {...item} key={index} />
               })}
-              <InfiniteScroll hasMore={false} loadMore={loadMoreComments} />
+              <InfiniteScroll hasMore={comment.last_id !== comment.end_id} loadMore={loadMoreComments} />
             </div>
           ) : (
             <NoneComment />
