@@ -1,4 +1,4 @@
-import { NavBar, InfiniteScroll } from "antd-mobile"
+import { NavBar, InfiniteScroll, Popup } from "antd-mobile"
 import { useHistory } from "react-router-dom"
 import classNames from "classnames"
 import styles from "./index.module.scss"
@@ -10,13 +10,15 @@ import CommentFooter from "./components/CommentFooter"
 import { useInitialState } from "@/utils/use-initial-state"
 import { getArticleInfo, getArticleComment } from "@/store/actions/article"
 import { useParams } from "react-router"
+import CommentInput from "./components/CommentInput"
+
 import dayjs from "dayjs"
 // 导入本地化格式插件
 import localizedFormat from "dayjs/plugin/localizedFormat"
 
 import highlight from "highlight.js"
 import "highlight.js/styles/vs2015.css"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import NoneComment from "./components/NoneComment"
 // import { useDispatch } from "react-redux"
 enum CommentType {
@@ -27,11 +29,25 @@ enum CommentType {
 dayjs.extend(localizedFormat)
 const Article = () => {
   // const dispatch = useDispatch()
+  // 创建控制文章评论弹出层展示或隐藏的状态
+  const [showArticleComment, setShowArticleComment] = useState(false)
   const params = useParams<{ id: string }>()
   const getArticleInfoFn = () => {
     return getArticleInfo(params.id)
   }
-
+  const renderArticleComment = () => {
+    return (
+      <Popup
+        bodyStyle={{
+          height: "100%",
+        }}
+        position="bottom"
+        visible={showArticleComment}
+      >
+        <CommentInput onClose={() => setShowArticleComment(false)} />
+      </Popup>
+    )
+  }
   // 文章详情 代码内容 高亮
   useEffect(() => {
     const dgHtmlDOM = document.querySelector(".dg-html")
@@ -175,9 +191,10 @@ const Article = () => {
         </NavBar>
         {/* 文章详情和评论 */}
         {renderArticle()}
-
+        {/* 创建文章评论的弹出层 */}
+        {renderArticleComment()}
         {/* 底部评论栏 */}
-        <CommentFooter attitude={attitude} is_collected={is_collected} />
+        <CommentFooter attitude={attitude} is_collected={is_collected} onShowArticleComment={() => setShowArticleComment(true)} />
       </div>
     </div>
   )

@@ -3,16 +3,17 @@ import styles from "./index.module.scss"
 
 type Props = {
   attitude: number
+  onShowArticleComment: () => void
   is_collected: boolean
   // normal 普通评论
   // reply 回复评论
   type?: "normal" | "reply"
 }
 
-const CommentFooter = ({ type = "normal", attitude, is_collected }: Props) => {
+const CommentFooter = ({ type = "normal", attitude, is_collected, onShowArticleComment }: Props) => {
   return (
     <div className={styles.root}>
-      <div className="input-btn">
+      <div className="input-btn" onClick={onShowArticleComment}>
         <Icon type="iconbianji" />
         <span>抢沙发</span>
       </div>
