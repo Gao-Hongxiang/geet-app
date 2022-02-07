@@ -8,9 +8,16 @@ type Props = {
   // normal 普通评论
   // reply 回复评论
   type?: "normal" | "reply"
+  onScrollTop: () => void
 }
 
-const CommentFooter = ({ type = "normal", attitude, is_collected, onShowArticleComment }: Props) => {
+const CommentFooter = ({
+  type = "normal",
+  attitude,
+  is_collected,
+  onShowArticleComment,
+  onScrollTop,
+}: Props) => {
   return (
     <div className={styles.root}>
       <div className="input-btn" onClick={onShowArticleComment}>
@@ -20,7 +27,7 @@ const CommentFooter = ({ type = "normal", attitude, is_collected, onShowArticleC
 
       {type === "normal" && (
         <>
-          <div className="action-item">
+          <div className="action-item" onClick={onScrollTop}>
             <Icon type="iconbtn_comment" />
             <p>评论</p>
             {!!1 && <span className="bage">{1}</span>}
@@ -30,7 +37,9 @@ const CommentFooter = ({ type = "normal", attitude, is_collected, onShowArticleC
             <p>点赞</p>
           </div>
           <div className="action-item">
-            <Icon type={is_collected ? "iconbtn_collect_sel" : "iconbtn_collect"} />
+            <Icon
+              type={is_collected ? "iconbtn_collect_sel" : "iconbtn_collect"}
+            />
             <p>收藏</p>
           </div>
         </>

@@ -30,6 +30,15 @@ export default function article(state = initialState, action: ArticleAction) {
           results: actionType === "replace" ? results : [...state.comment.results, ...results],
         },
       }
+    case "article/addArticleComment":
+      return {
+        ...state,
+        comment: {
+          ...state.comment,
+          total_count: state.comment.total_count + 1,
+          results: [action.payload, ...state.comment.results],
+        },
+      }
     default:
       return state
   }

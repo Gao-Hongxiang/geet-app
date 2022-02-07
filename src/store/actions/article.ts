@@ -1,4 +1,4 @@
-import { ArticleCommentResponse, ArticleInfoResponse } from "./../../types/data.d"
+import { AddArticleCommentResponse, ArticleCommentResponse, ArticleInfoResponse } from "./../../types/data.d"
 import { http } from "@/utils/http"
 import { RootThunkAction } from "@/types/store"
 
@@ -24,5 +24,16 @@ export const getArticleComment = (type: string, source: string, offset: string |
       type: "article/getArticleComments",
       payload: { ...data, actionType },
     })
+  }
+}
+
+export const addArticleComment = (target: string, content: string, art_id?: string): RootThunkAction => {
+  return async (dispatch) => {
+    const res = (await http.post("comments", {
+      target,
+      content,
+    })) as AddArticleCommentResponse
+    dispatch({ type: "article/addArticleComment", payload: res.data.new_obj })
+    console.log(res.data.new_obj)
   }
 }

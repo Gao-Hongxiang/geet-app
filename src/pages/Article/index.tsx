@@ -8,7 +8,7 @@ import Icon from "@/components/Icon"
 import CommentItem from "./components/CommentItem"
 import CommentFooter from "./components/CommentFooter"
 import { useInitialState } from "@/utils/use-initial-state"
-import { getArticleInfo, getArticleComment } from "@/store/actions/article"
+import { getArticleInfo, getArticleComment, addArticleComment } from "@/store/actions/article"
 import { useParams } from "react-router"
 import CommentInput from "./components/CommentInput"
 
@@ -18,9 +18,9 @@ import localizedFormat from "dayjs/plugin/localizedFormat"
 
 import highlight from "highlight.js"
 import "highlight.js/styles/vs2015.css"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import NoneComment from "./components/NoneComment"
-// import { useDispatch } from "react-redux"
+import { useDispatch } from "react-redux"
 enum CommentType {
   Article = "a",
   Comment = "c",
@@ -28,23 +28,31 @@ enum CommentType {
 
 dayjs.extend(localizedFormat)
 const Article = () => {
-  // const dispatch = useDispatch()
+  const dispatch = useDispatch()
   // 创建控制文章评论弹出层展示或隐藏的状态
   const [showArticleComment, setShowArticleComment] = useState(false)
+  const [showComment, setShowComment] = useState(false)
   const params = useParams<{ id: string }>()
+  const wrapperRef = useRef<HTMLDivElement>(null)
   const getArticleInfoFn = () => {
     return getArticleInfo(params.id)
   }
+  const onAddCommetn = async (value: string) => {
+    await dispatch(addArticleComment(art_id, value))
+    setShowArticleComment(false)
+  }
+
   const renderArticleComment = () => {
     return (
       <Popup
+        destroyOnClose
         bodyStyle={{
           height: "100%",
         }}
         position="bottom"
         visible={showArticleComment}
       >
-        <CommentInput onClose={() => setShowArticleComment(false)} />
+        <CommentInput onClose={() => setShowArticleComment(false)} onAddComment={onAddCommetn} />
       </Popup>
     )
   }
@@ -85,12 +93,10 @@ const Article = () => {
   // ├─ attitude	integer	必须		用户对文章的态度, -1: 无态度，0-不喜欢，1-点赞
   // ├─ content	string	必须		文章内容
   const { detail } = useInitialState(getArticleInfoFn, "article")
-  console.log("detail", detail)
   const { art_id, title, pubdate, content, aut_name, aut_photo, is_followed, is_collected, attitude, comm_count, read_count, like_count } = detail
   const { comment } = useInitialState(() => {
     return getArticleComment(CommentType.Article, params.id, null, "replace")
   }, "article")
-  console.log("comment", comment)
   const history = useHistory()
   // useEffect(() => {
   //   dispatch(getArticleComment(CommentType.Article, params.id, null, "replace"))
@@ -100,10 +106,24 @@ const Article = () => {
     console.log("加载更多评论")
   }
 
+  const onScrollTop = () => {
+    if (wrapperRef.current) {
+      if (showComment) {
+        wrapperRef.current.scrollTop = 0
+      } else {
+        const contentDom = wrapperRef.current.querySelector<HTMLDivElement>(".article-wrapper")
+        if (contentDom) {
+          wrapperRef.current.scrollTop = contentDom.offsetHeight + 30
+        }
+      }
+    }
+    setShowComment(!showComment)
+  }
+
   const renderArticle = () => {
     // 文章详情
     return (
-      <div className="wrapper">
+      <div className="wrapper" ref={wrapperRef}>
         <div className="article-wrapper">
           <div className="header">
             <h1 className="title">{title}</h1>
@@ -194,7 +214,7 @@ const Article = () => {
         {/* 创建文章评论的弹出层 */}
         {renderArticleComment()}
         {/* 底部评论栏 */}
-        <CommentFooter attitude={attitude} is_collected={is_collected} onShowArticleComment={() => setShowArticleComment(true)} />
+        <CommentFooter onScrollTop={onScrollTop} attitude={attitude} is_collected={is_collected} onShowArticleComment={() => setShowArticleComment(true)} />
       </div>
     </div>
   )

@@ -155,3 +155,10 @@ export type ArticleComment = {
   results: ArtComment[]
 }
 export type ArticleCommentResponse = ApiResponse<ArticleComment>
+export type AddArticleComment = {
+  com_id: string
+  new_obj: ArtComment
+  target: string
+}
+
+export type AddArticleCommentResponse = ApiResponse<AddArticleComment>

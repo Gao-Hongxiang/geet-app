@@ -52,3 +52,7 @@ export type ArticleAction =
       type: "article/getArticleComments"
       payload: ArticleComment & { actionType: "append" | "replace" }
     }
+  | {
+      type: "article/addArticleComment"
+      payload: ArtComment
+    }
