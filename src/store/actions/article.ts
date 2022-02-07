@@ -34,6 +34,5 @@ export const addArticleComment = (target: string, content: string, art_id?: stri
       content,
     })) as AddArticleCommentResponse
     dispatch({ type: "article/addArticleComment", payload: res.data.new_obj })
-    console.log(res.data.new_obj)
   }
 }

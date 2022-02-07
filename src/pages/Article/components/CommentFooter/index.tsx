@@ -5,19 +5,14 @@ type Props = {
   attitude: number
   onShowArticleComment: () => void
   is_collected: boolean
+  comm_count: number
   // normal 普通评论
   // reply 回复评论
   type?: "normal" | "reply"
   onScrollTop: () => void
 }
 
-const CommentFooter = ({
-  type = "normal",
-  attitude,
-  is_collected,
-  onShowArticleComment,
-  onScrollTop,
-}: Props) => {
+const CommentFooter = ({ type = "normal", attitude, is_collected, onShowArticleComment, onScrollTop, comm_count }: Props) => {
   return (
     <div className={styles.root}>
       <div className="input-btn" onClick={onShowArticleComment}>
@@ -30,16 +25,14 @@ const CommentFooter = ({
           <div className="action-item" onClick={onScrollTop}>
             <Icon type="iconbtn_comment" />
             <p>评论</p>
-            {!!1 && <span className="bage">{1}</span>}
+            {!!1 && <span className="bage">{comm_count}</span>}
           </div>
           <div className="action-item">
             <Icon type={!!attitude ? "iconbtn_like_sel" : "iconbtn_like2"} />
             <p>点赞</p>
           </div>
           <div className="action-item">
-            <Icon
-              type={is_collected ? "iconbtn_collect_sel" : "iconbtn_collect"}
-            />
+            <Icon type={is_collected ? "iconbtn_collect_sel" : "iconbtn_collect"} />
             <p>收藏</p>
           </div>
         </>

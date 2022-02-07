@@ -60,7 +60,6 @@ const Article = () => {
   useEffect(() => {
     const dgHtmlDOM = document.querySelector(".dg-html")
     const codes = dgHtmlDOM?.querySelectorAll<HTMLElement>("pre code")
-    // console.log(codes)
     if (codes && codes.length > 0) {
       codes.forEach((el) => {
         // 让每个 code 内容实现代码高亮
@@ -214,7 +213,7 @@ const Article = () => {
         {/* 创建文章评论的弹出层 */}
         {renderArticleComment()}
         {/* 底部评论栏 */}
-        <CommentFooter onScrollTop={onScrollTop} attitude={attitude} is_collected={is_collected} onShowArticleComment={() => setShowArticleComment(true)} />
+        <CommentFooter comm_count={comm_count} onScrollTop={onScrollTop} attitude={attitude} is_collected={is_collected} onShowArticleComment={() => setShowArticleComment(true)} />
       </div>
     </div>
   )

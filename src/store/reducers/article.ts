@@ -38,6 +38,10 @@ export default function article(state = initialState, action: ArticleAction) {
           total_count: state.comment.total_count + 1,
           results: [action.payload, ...state.comment.results],
         },
+        detail: {
+          ...state.detail,
+          comm_count: state.detail.comm_count + 1,
+        },
       }
     default:
       return state
