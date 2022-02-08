@@ -1,4 +1,4 @@
-import { ArticleAction } from "./../../types/store.d"
+import { ArticleAction, ResetAction } from "./../../types/store.d"
 import { ArtComment, ArticleComment, ArticleInfo } from "@/types/data.d"
 type ArticleState = {
   detail: ArticleInfo
@@ -11,7 +11,7 @@ const initialState: ArticleState = {
   },
 } as ArticleState
 
-export default function article(state = initialState, action: ArticleAction) {
+export default function article(state = initialState, action: ArticleAction | ResetAction) {
   switch (action.type) {
     case "article/get":
       return { ...state, detail: action.payload }
@@ -43,6 +43,11 @@ export default function article(state = initialState, action: ArticleAction) {
           comm_count: state.detail.comm_count + 1,
         },
       }
+    case "reset":
+      if (action.payload === "article") {
+        return initialState
+      }
+      return state
     default:
       return state
   }

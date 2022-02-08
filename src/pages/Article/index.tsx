@@ -11,7 +11,7 @@ import { useInitialState } from "@/utils/use-initial-state"
 import { getArticleInfo, getArticleComment, addArticleComment } from "@/store/actions/article"
 import { useParams } from "react-router"
 import CommentInput from "./components/CommentInput"
-
+import { useResetRedux } from "@/utils/use-initial-state"
 import dayjs from "dayjs"
 // 导入本地化格式插件
 import localizedFormat from "dayjs/plugin/localizedFormat"
@@ -28,6 +28,7 @@ enum CommentType {
 
 dayjs.extend(localizedFormat)
 const Article = () => {
+  useResetRedux("article")
   const dispatch = useDispatch()
   // 创建控制文章评论弹出层展示或隐藏的状态
   const [showArticleComment, setShowArticleComment] = useState(false)

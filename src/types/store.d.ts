@@ -56,3 +56,7 @@ export type ArticleAction =
       type: "article/addArticleComment"
       payload: ArtComment
     }
+export type ResetAction = {
+  type: "reset"
+  payload: keyof RootState
+}

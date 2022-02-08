@@ -1,6 +1,6 @@
 import Icon from "@/components/Icon"
 import styles from "./index.module.scss"
-
+// import { useEffect } from "react"
 type Props = {
   attitude: number
   onShowArticleComment: () => void
@@ -25,7 +25,7 @@ const CommentFooter = ({ type = "normal", attitude, is_collected, onShowArticleC
           <div className="action-item" onClick={onScrollTop}>
             <Icon type="iconbtn_comment" />
             <p>评论</p>
-            {!!1 && <span className="bage">{comm_count}</span>}
+            {!!comm_count && <span className="bage">{comm_count}</span>}
           </div>
           <div className="action-item">
             <Icon type={!!attitude ? "iconbtn_like_sel" : "iconbtn_like2"} />
