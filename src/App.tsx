@@ -9,6 +9,7 @@ import { customHistory } from "./utils/history"
 import Chat from "./pages/Profile/Chat"
 import Article from "./pages/Article"
 import Search from "./pages/Search"
+import SearchResult from "./pages/Search/Result"
 import "./App.scss"
 function App() {
   return (
@@ -20,7 +21,8 @@ function App() {
           <Route path="/login" component={Login} />
           <Route path="/chat" component={Chat} />
           <Route path="/articles/:id" component={Article} />
-          <Route path="/search" component={Search} />
+          <Route exact path="/search" component={Search} />
+          <Route path="/search/result" component={SearchResult} />
           <AuthRoute path="/profile/edit">
             <ProfileEdit />
           </AuthRoute>

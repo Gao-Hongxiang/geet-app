@@ -7,10 +7,11 @@ import { NavBar, SearchBar } from "antd-mobile"
 import { getSuggestion } from "@/store/actions/search"
 import Icon from "@/components/Icon"
 import styles from "./index.module.scss"
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { DebouncedFunc } from "lodash"
 import { RootState } from "@/types/store"
+const GEEK_SEARCH_KEY = "geek-search-history"
 const SearchPage = () => {
   const dispatch = useDispatch()
   const history = useHistory()
@@ -20,6 +21,12 @@ const SearchPage = () => {
     // console.log('要防抖的代码逻辑执行了', value)
     dispatch(getSuggestion(value))
   }, 500)
+  const [searchHistory, setSearchHistory] = useState<string[]>([])
+
+  useEffect(() => {
+    const localHistory = JSON.parse(localStorage.getItem(GEEK_SEARCH_KEY) ?? "[]") as string[]
+    setSearchHistory(localHistory)
+  }, [])
   if (!debounceFnRef.current) {
     debounceFnRef.current = debounceFn
   }
@@ -70,34 +77,85 @@ const SearchPage = () => {
       left,
       search,
       right,
+      raw: item,
     }
   })
+  const saveHistories = (value: string) => {
+    // 1. 创建保存历史记录的函数 saveHistories
+    // 2. 从本地缓存中获取到历史记录，判断本地缓存中是否有历史记录数据
+    let localHistory = JSON.parse(localStorage.getItem(GEEK_SEARCH_KEY) ?? "[]") as string[]
+    if (localHistory.length === 0) {
+      // 3. 如果没有，直接添加当前搜索内容到历史记录中
+      localHistory = [value]
+    } else {
+      // 4. 如果有，判断是否包含当前搜索内容
+      if (localHistory.indexOf(value) > -1) {
+        // 6. 如果包含，将其移动到第一个
+        localHistory = [value, ...localHistory.filter((item) => item !== value)]
+      } else {
+        // 5. 如果没有包含，直接添加到历史记录中
+        localHistory = [value, ...localHistory]
+      }
+    }
+    // 7. 将最新的历史记录存储到本地缓存中
+    localStorage.setItem(GEEK_SEARCH_KEY, JSON.stringify(localHistory))
+  }
+  const onSearch = (value: string) => {
+    dispatch(clearSuggestion())
+    history.push(`/search/result?q=${value}`)
+    saveHistories(value)
+  }
+  // 清空所有历史记录
+  const onClearAllHistory = () => {
+    localStorage.removeItem(GEEK_SEARCH_KEY)
+    setSearchHistory([])
+  }
+  // 删除单个历史记录
+  const onDeleteHistory = (value: string) => {
+    return () => {
+      const localHistory = JSON.parse(localStorage.getItem(GEEK_SEARCH_KEY) ?? "[]") as string[]
+      const newHistory = localHistory.filter((item) => item !== value)
+      localStorage.setItem(GEEK_SEARCH_KEY, JSON.stringify(newHistory))
+
+      setSearchHistory(newHistory)
+    }
+  }
   return (
     <div className={styles.root}>
-      <NavBar className="navbar" onBack={() => history.go(-1)} right={<span className="search-text">搜索</span>}>
+      <NavBar
+        className="navbar"
+        onBack={() => history.go(-1)}
+        right={
+          <span className="search-text" onClick={() => onSearch(searchText)}>
+            搜索
+          </span>
+        }
+      >
         <SearchBar placeholder="请输入关键字搜索" value={searchText} onChange={onSearchChange} />
       </NavBar>
 
-      {true && (
+      {searchText === "" && (
         <div
           className="history"
           style={{
-            display: true ? "none" : "block",
+            display: searchHistory.length <= 0 ? "none" : "block",
           }}
         >
           <div className="history-header">
             <span>搜索历史</span>
-            <span>
+            <span onClick={onClearAllHistory}>
               <Icon type="iconbtn_del" />
               清除全部
             </span>
           </div>
 
           <div className="history-list">
-            <span className="history-item">
-              <span className="text-overflow">黑马程序员</span>
-              <Icon type="iconbtn_essay_close" />
-            </span>
+            {searchHistory.map((item, index) => (
+              <span key={index} className="history-item" onClick={onDeleteHistory(item)}>
+                <span className="text-overflow">{item}</span>
+                <Icon type="iconbtn_essay_close" />
+              </span>
+            ))}
           </div>
         </div>
       )}
@@ -108,7 +166,7 @@ const SearchPage = () => {
         })}
       >
         {highlightSuggestion.map((item, index) => (
-          <div key={index} className="result-item">
+          <div key={index} className="result-item" onClick={() => onSearch(item.raw)}>
             <Icon className="icon-search" type="iconbtn_search" />
             <div className="result-value text-overflow">
               {/* span 包裹的内容会有高亮效果 */}
