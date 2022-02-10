@@ -14,6 +14,11 @@ const Search = (state = initialState, action: SearchAction): SearchState => {
         suggestion: action.payload,
       }
 
+    case "search/clearSuggestion":
+      return {
+        ...state,
+        suggestion: [],
+      }
     default:
       return state
   }

@@ -60,7 +60,11 @@ export type ResetAction = {
   type: "reset"
   payload: keyof RootState
 }
-export type SearchAction = {
-  type: "search/suggestion"
-  payload: Suggestion["options"]
-}
+export type SearchAction =
+  | {
+      type: "search/suggestion"
+      payload: Suggestion["options"]
+    }
+  | {
+      type: "search/clearSuggestion"
+    }

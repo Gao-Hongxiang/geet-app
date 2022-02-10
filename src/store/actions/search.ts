@@ -9,7 +9,7 @@ export const getSuggestion = (value: string): RootThunkAction => {
         q: value,
       },
     })) as SuggestionResponse
-    console.log(res)
     dispatch({ type: "search/suggestion", payload: res.data.options })
   }
 }
+export const clearSuggestion = () => ({ type: "search/clearSuggestion" })
