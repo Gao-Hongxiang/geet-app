@@ -1,20 +1,41 @@
 import classnames from "classnames"
 import { useHistory } from "react-router"
-// import debounce from "lodash/debounce"
+// import { useDebounceFn } from "ahooks"
+import debounce from "lodash/debounce"
 import { NavBar, SearchBar } from "antd-mobile"
 import { getSuggestion } from "@/store/actions/search"
 import Icon from "@/components/Icon"
 import styles from "./index.module.scss"
-import { useState } from "react"
+import { useState, useRef } from "react"
 import { useDispatch } from "react-redux"
+import { DebouncedFunc } from "lodash"
 const SearchPage = () => {
   const dispatch = useDispatch()
   const history = useHistory()
+  const debounceFnRef = useRef<DebouncedFunc<(value: any) => void>>()
+  const debounceFn = debounce((value) => {
+    // console.log('要防抖的代码逻辑执行了', value)
+    dispatch(getSuggestion(value))
+  }, 500)
+  if (!debounceFnRef.current) {
+    debounceFnRef.current = debounceFn
+  }
   const [searchTxt, setSearchTxt] = useState("")
   const onSearchChange = (value: string) => {
     setSearchTxt(value)
-    dispatch(getSuggestion(value))
+    if (value.trim() === "") return
+    // debounceFn(value)
+    debounceFnRef.current?.(value)
   }
+  // const { run: debounceFn } = useDebounceFn(
+  //   (value) => {
+  //     dispatch(getSuggestion(value))
+  //   },
+  //   {
+  //     wait: 500,
+  //   }
+  // )
+
   return (
     <div className={styles.root}>
       <NavBar className="navbar" onBack={() => history.go(-1)} right={<span className="search-text">搜索</span>}>
