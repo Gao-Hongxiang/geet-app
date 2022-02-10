@@ -38,7 +38,7 @@ const ArticleList = ({ channelId }: Props) => {
         {results.map((item, index) => {
           return (
             <div className="article-item" key={index} onClick={() => history.push(`/articles/${item.art_id}`)}>
-              <ArticleItem {...item} />
+              <ArticleItem {...item} type={item.cover.type} images={item.cover.images} />
             </div>
           )
         })}

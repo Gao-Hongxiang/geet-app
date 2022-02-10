@@ -83,7 +83,7 @@ export type Articles = {
     comm_count: number
     pubdate: string
     cover: {
-      type: number
+      type: 0 | 1 | 3
       images: string[]
     }
   }[]

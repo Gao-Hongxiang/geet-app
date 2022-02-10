@@ -2,10 +2,13 @@ import Icon from "@/components/Icon"
 import { Tabs } from "antd-mobile"
 import { getUserChannel } from "@/store/actions/home"
 import styles from "./index.module.scss"
+import { useHistory } from "react-router-dom"
 
 import ArticleList from "./components/ArticleList"
 import { useInitialState } from "@/utils/use-initial-state"
 const Home = () => {
+  const history = useHistory()
+
   const { useChannels } = useInitialState(getUserChannel, "home")
   return (
     <div className={styles.root}>
@@ -22,7 +25,7 @@ const Home = () => {
         </Tabs>
       )}
       <div className="tabs-opration">
-        <Icon type="iconbtn_search" />
+        <Icon type="iconbtn_search" onClick={() => history.push("/search")} />
         <Icon type="iconbtn_channel" />
       </div>
     </div>
