@@ -23,9 +23,9 @@ const SearchPage = () => {
   if (!debounceFnRef.current) {
     debounceFnRef.current = debounceFn
   }
-  const [searchTxt, setSearchTxt] = useState("")
+  const [searchText, setSearchText] = useState("")
   const onSearchChange = (value: string) => {
-    setSearchTxt(value)
+    setSearchText(value)
     if (value.trim() === "") {
       return dispatch(clearSuggestion())
     }
@@ -41,11 +41,41 @@ const SearchPage = () => {
   //     wait: 500,
   //   }
   // )
+  /*
+    ['012'] => [ { left: '0', search: '1', right: '2' } ]
+  */
   console.log(suggestion)
+
+  const highlightSuggestion = suggestion.map((item) => {
+    // if (item) {
+    //   return ""
+    // }
+    // console.log(item)
+    // 将搜索内容以及返回的联想关键词结果，全部转化为小写再比较，屏蔽大小写的差异
+    const lowerSearchText = searchText.toString().toLowerCase()
+    const lowerSuggestionItem = item ? item.toString().toLowerCase() : ""
+
+    // 先找到与关键词匹配的内容，所在的位置
+    const searchIndex = lowerSuggestionItem.indexOf(lowerSearchText)
+
+    // 根据关键词的位置，将搜索结果分为 左、中、右 三部分
+    // 左：0 -> searchIndex
+    // 中：searchIndex -> searchIndex + lowerSearchText.length
+    // 右：searchIndex + lowerSearchText.length -> 最后
+    const left = item?.slice(0, searchIndex)
+    const search = item?.slice(searchIndex, searchIndex + lowerSearchText.length)
+    const right = item?.slice(searchIndex + lowerSearchText.length)
+
+    return {
+      left,
+      search,
+      right,
+    }
+  })
   return (
     <div className={styles.root}>
       <NavBar className="navbar" onBack={() => history.go(-1)} right={<span className="search-text">搜索</span>}>
-        <SearchBar placeholder="请输入关键字搜索" value={searchTxt} onChange={onSearchChange} />
+        <SearchBar placeholder="请输入关键字搜索" value={searchText} onChange={onSearchChange} />
       </NavBar>
 
       {true && (
@@ -77,12 +107,14 @@ const SearchPage = () => {
           show: suggestion.length > 0,
         })}
       >
-        {suggestion.map((item, index) => (
+        {highlightSuggestion.map((item, index) => (
           <div key={index} className="result-item">
             <Icon className="icon-search" type="iconbtn_search" />
             <div className="result-value text-overflow">
               {/* span 包裹的内容会有高亮效果 */}
-              {item}
+              {item.left}
+              <span>{item.search}</span>
+              {item.right}
             </div>
           </div>
         ))}
