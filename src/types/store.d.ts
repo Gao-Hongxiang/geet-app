@@ -1,10 +1,10 @@
 import { ArticleComment } from "@/types/data.d"
 import { ArticleInfo, Articles, Channel } from "./data.d"
-import { User, Token, UserProfile } from "./data"
+import { User, Token, UserProfile, Suggestion } from "./data"
 import store from "@/store"
 import { ThunkAction } from "redux-thunk"
 export type RootState = ReturnType<typeof store.getState>
-export type RootAction = LoginAction | ProfileAction | HomeAction | ArticleAction
+export type RootAction = LoginAction | ProfileAction | HomeAction | ArticleAction | SearchAction
 export type RootThunkAction = ThunkAction<void, RootState, unknown, RootAction>
 //登录action类型
 export type LoginAction =
@@ -59,4 +59,8 @@ export type ArticleAction =
 export type ResetAction = {
   type: "reset"
   payload: keyof RootState
+}
+export type SearchAction = {
+  type: "search/suggestion"
+  payload: Suggestion["options"]
 }

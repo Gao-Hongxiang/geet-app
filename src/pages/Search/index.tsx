@@ -1,17 +1,24 @@
 import classnames from "classnames"
 import { useHistory } from "react-router"
-import { NavBar, Search } from "antd-mobile"
-
+// import debounce from "lodash/debounce"
+import { NavBar, SearchBar } from "antd-mobile"
+import { getSuggestion } from "@/store/actions/search"
 import Icon from "@/components/Icon"
 import styles from "./index.module.scss"
-
+import { useState } from "react"
+import { useDispatch } from "react-redux"
 const SearchPage = () => {
+  const dispatch = useDispatch()
   const history = useHistory()
-
+  const [searchTxt, setSearchTxt] = useState("")
+  const onSearchChange = (value: string) => {
+    setSearchTxt(value)
+    dispatch(getSuggestion(value))
+  }
   return (
     <div className={styles.root}>
       <NavBar className="navbar" onBack={() => history.go(-1)} right={<span className="search-text">搜索</span>}>
-        <Search placeholder="请输入关键字搜索" />
+        <SearchBar placeholder="请输入关键字搜索" value={searchTxt} onChange={onSearchChange} />
       </NavBar>
 
       {true && (

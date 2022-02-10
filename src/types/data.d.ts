@@ -162,3 +162,9 @@ export type AddArticleComment = {
 }
 
 export type AddArticleCommentResponse = ApiResponse<AddArticleComment>
+
+// 搜索关键词
+export type Suggestion = {
+  options: string[]
+}
+export type SuggestionResponse = ApiResponse<Suggestion>
