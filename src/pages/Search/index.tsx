@@ -51,7 +51,7 @@ const SearchPage = () => {
   /*
     ['012'] => [ { left: '0', search: '1', right: '2' } ]
   */
-  console.log(suggestion)
+  // console.log(suggestion)
 
   const highlightSuggestion = suggestion.map((item) => {
     // if (item) {
@@ -101,9 +101,11 @@ const SearchPage = () => {
     localStorage.setItem(GEEK_SEARCH_KEY, JSON.stringify(localHistory))
   }
   const onSearch = (value: string) => {
-    dispatch(clearSuggestion())
-    history.push(`/search/result?q=${value}`)
-    saveHistories(value)
+    if (value) {
+      dispatch(clearSuggestion())
+      history.push(`/search/result?q=${value}`)
+      saveHistories(value)
+    }
   }
   // 清空所有历史记录
   const onClearAllHistory = () => {
@@ -151,9 +153,11 @@ const SearchPage = () => {
 
           <div className="history-list">
             {searchHistory.map((item, index) => (
-              <span key={index} className="history-item" onClick={onDeleteHistory(item)}>
-                <span className="text-overflow">{item}</span>
-                <Icon type="iconbtn_essay_close" />
+              <span key={index} className="history-item">
+                <span className="text-overflow" onClick={() => onSearch(item)}>
+                  {item}
+                </span>
+                <Icon type="iconbtn_essay_close" onClick={onDeleteHistory(item)} />
               </span>
             ))}
           </div>
