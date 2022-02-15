@@ -47,7 +47,7 @@ const Result = () => {
       }
 
       return (
-        <div key={index} className="article-item" onClick={() => history.push(`/article/${art_id}`)}>
+        <div key={index} className="article-item" onClick={() => history.push(`/articles/${art_id}`)}>
           <ArticleItem {...articleData} />
         </div>
       )

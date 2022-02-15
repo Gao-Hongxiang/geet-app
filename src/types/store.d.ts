@@ -54,6 +54,10 @@ export type HomeAction =
       type: "home/delChannel"
       payload: Channel
     }
+  | {
+      type: "home/addChannel"
+      payload: Channel
+    }
 export type ArticleAction =
   | {
       type: "article/get"

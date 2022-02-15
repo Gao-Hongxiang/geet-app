@@ -1,6 +1,6 @@
 import classNames from "classnames"
 import { useInitialState } from "@/utils/use-initial-state"
-import { changechannelActiveKey, getAllChannel, delChannel } from "@/store/actions/home"
+import { changechannelActiveKey, getAllChannel, delChannel, addChannel } from "@/store/actions/home"
 import Icon from "@/components/Icon"
 import styles from "./index.module.scss"
 import { useSelector } from "react-redux"
@@ -16,6 +16,7 @@ type Props = {
 const Channels = ({ onClose }: Props) => {
   const dispatch = useDispatch()
   const [isEdit, setIsEdit] = useState(false)
+
   const onChannelClick = (channel: Channel) => {
     if (!isEdit) {
       dispatch(changechannelActiveKey(channel.id + ""))
@@ -30,6 +31,9 @@ const Channels = ({ onClose }: Props) => {
     setIsEdit((isEdit) => {
       return !isEdit
     })
+  }
+  const onAddChannel = (channel: Channel) => {
+    dispatch(addChannel(channel))
   }
   const { useChannels } = useSelector((state: RootState) => state.home)
   const { restChannel, channelActiveKey } = useInitialState(getAllChannel, "home")
@@ -67,7 +71,7 @@ const Channels = ({ onClose }: Props) => {
           </div>
           <div className="channel-list">
             {restChannel.map((item) => (
-              <span key={item.id} className="channel-list-item">
+              <span key={item.id} onClick={() => onAddChannel(item)} className="channel-list-item">
                 + {item.name}
               </span>
             ))}
