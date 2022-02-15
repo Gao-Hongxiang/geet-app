@@ -54,3 +54,4 @@ export const getArticleList = (channel_id: number, timestamp: string, type: "app
     dispatch({ type: "home/getChannelArticles", payload: { data: res.data, channelId: channel_id, actionType: type } })
   }
 }
+export const changechannelActiveKey = (id: string) => ({ type: "home/changeTab", payload: id })

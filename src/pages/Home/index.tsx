@@ -1,19 +1,25 @@
 import Icon from "@/components/Icon"
 import { Tabs, Popup } from "antd-mobile"
 
-import { getUserChannel } from "@/store/actions/home"
+import { changechannelActiveKey, getUserChannel } from "@/store/actions/home"
 import styles from "./index.module.scss"
 import { useHistory } from "react-router-dom"
 import Channels from "./components/Channels"
 import { useState } from "react"
 import ArticleList from "./components/ArticleList"
+import { useDispatch, useSelector } from "react-redux"
 import { useInitialState } from "@/utils/use-initial-state"
+import { RootState } from "@/types/store"
 const Home = () => {
+  const dispatch = useDispatch()
+  const { channelActiveKey } = useSelector((state: RootState) => state.home)
   const history = useHistory()
   const [channelVisible, setChannelVisible] = useState(false)
   // 频道管理弹出层展示
   const onChannelShow = () => setChannelVisible(true)
-
+  const onTabChange = (key: string) => {
+    dispatch(changechannelActiveKey(key))
+  }
   // 频道管理弹出层隐藏
   const onChannelHide = () => setChannelVisible(false)
   const { useChannels } = useInitialState(getUserChannel, "home")
@@ -21,7 +27,7 @@ const Home = () => {
     <div className={styles.root}>
       {/* 频道 Tabs 列表 */}
       {useChannels.length > 0 && (
-        <Tabs className="tabs" activeLineMode="fixed">
+        <Tabs className="tabs" activeLineMode="fixed" activeKey={channelActiveKey} onChange={onTabChange}>
           {useChannels.map((item) => {
             return (
               <Tabs.Tab title={item.name} key={item.id}>

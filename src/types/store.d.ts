@@ -46,6 +46,10 @@ export type HomeAction =
       type: "home/getAllChannel"
       payload: Channel[]
     }
+  | {
+      type: "home/changeTab"
+      payload: string
+    }
 
 export type ArticleAction =
   | {
