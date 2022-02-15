@@ -1,5 +1,6 @@
 import { Articles, Channel } from "./../../types/data.d"
 import { HomeAction } from "@/types/store"
+import { sortBy } from "lodash"
 type HomeState = {
   useChannels: Channel[]
   channelActiveKey: string
@@ -39,6 +40,14 @@ export default function Home(state = initialState, action: HomeAction) {
       return {
         ...state,
         channelArticles: { ...state.channelArticles, [channelId]: { pre_timestamp, results: actionType === "append" ? [...preArticles, ...results] : [...results] } },
+      }
+    case "home/delChannel":
+      return {
+        ...state,
+        // 删除当前频道
+        useChannels: state.useChannels.filter((item) => item.id !== action.payload.id),
+        // 将被删除频道添加到推荐频道中，并且根据 id 进行排序
+        restChannel: sortBy([...state.restChannel, action.payload], "id"),
       }
     default:
       return state

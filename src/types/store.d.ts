@@ -50,7 +50,10 @@ export type HomeAction =
       type: "home/changeTab"
       payload: string
     }
-
+  | {
+      type: "home/delChannel"
+      payload: Channel
+    }
 export type ArticleAction =
   | {
       type: "article/get"

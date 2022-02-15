@@ -43,6 +43,25 @@ export const getAllChannel = (): RootThunkAction => {
     dispatch({ type: "home/getAllChannel", payload: restChannels })
   }
 }
+export const delChannel = (channel: Channel): RootThunkAction => {
+  return async (dispatch, getState) => {
+    const {
+      login: { token },
+    } = getState()
+
+    if (token) {
+      // 已登录
+      await http.delete(`/user/channels/${channel.id}`)
+    } else {
+      // 未登录
+      const localChannels = JSON.parse(localStorage.getItem(Channel_Key) ?? "[]") as Channel[]
+
+      const userChannel = localChannels.filter((item) => item.id !== channel.id)
+      localStorage.setItem(Channel_Key, JSON.stringify(userChannel))
+    }
+    dispatch({ type: "home/delChannel", payload: channel })
+  }
+}
 export const getArticleList = (channel_id: number, timestamp: string, type: "append" | "replace"): RootThunkAction => {
   return async (dispatch) => {
     const res = (await http.get("/articles", {
