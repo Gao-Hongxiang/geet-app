@@ -42,6 +42,10 @@ export type HomeAction =
         actionType: "append" | "replace"
       }
     }
+  | {
+      type: "home/getAllChannel"
+      payload: Channel[]
+    }
 
 export type ArticleAction =
   | {

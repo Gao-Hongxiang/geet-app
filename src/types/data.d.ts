@@ -58,7 +58,11 @@ export type UserChannel = {
   channels: Channel[]
 }
 //respose响应数据结构
-
+// 所有频道数据
+export type AllChannels = {
+  channels: Channel[]
+}
+export type AllChannelsResponse = ApiResponse<AllChannels>
 export type UserChannelResponse = ApiResponse<UserChannel>
 // ├─ pre_timestamp	integer	必须		请求前一页历史数据的时间戳
 // ├─ results	object []	必须

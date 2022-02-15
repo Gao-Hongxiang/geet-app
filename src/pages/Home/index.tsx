@@ -1,14 +1,21 @@
 import Icon from "@/components/Icon"
-import { Tabs } from "antd-mobile"
+import { Tabs, Popup } from "antd-mobile"
+
 import { getUserChannel } from "@/store/actions/home"
 import styles from "./index.module.scss"
 import { useHistory } from "react-router-dom"
-
+import Channels from "./components/Channels"
+import { useState } from "react"
 import ArticleList from "./components/ArticleList"
 import { useInitialState } from "@/utils/use-initial-state"
 const Home = () => {
   const history = useHistory()
+  const [channelVisible, setChannelVisible] = useState(false)
+  // 频道管理弹出层展示
+  const onChannelShow = () => setChannelVisible(true)
 
+  // 频道管理弹出层隐藏
+  const onChannelHide = () => setChannelVisible(false)
   const { useChannels } = useInitialState(getUserChannel, "home")
   return (
     <div className={styles.root}>
@@ -26,8 +33,12 @@ const Home = () => {
       )}
       <div className="tabs-opration">
         <Icon type="iconbtn_search" onClick={() => history.push("/search")} />
-        <Icon type="iconbtn_channel" />
+        <Icon type="iconbtn_channel" onClick={onChannelShow} />
       </div>
+      {/* 频道管理 - 弹出层 */}
+      <Popup visible={channelVisible} className="channel-popup" position="left" onMaskClick={onChannelHide}>
+        <Channels onClose={onChannelHide} />
+      </Popup>
     </div>
   )
 }

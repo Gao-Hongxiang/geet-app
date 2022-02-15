@@ -1,8 +1,9 @@
-import { ArticlesResponse } from "./../../types/data.d"
+import { ArticlesResponse, AllChannelsResponse } from "./../../types/data.d"
 import { Channel } from "../../types/data"
 import { http } from "@/utils/http"
 import { RootThunkAction } from "@/types/store"
 import { UserChannelResponse } from "@/types/data"
+import { differenceBy } from "lodash"
 const Channel_Key = "geek-channeks"
 export const getUserChannel = (): RootThunkAction => {
   return async (dispatch, getState) => {
@@ -29,6 +30,17 @@ export const getUserChannel = (): RootThunkAction => {
       }
     }
     dispatch({ type: "home/getUserChannels", payload: useChannels })
+  }
+}
+export const getAllChannel = (): RootThunkAction => {
+  return async (dispatch, getState) => {
+    const res = (await http.get("channels")) as AllChannelsResponse
+    const {
+      home: { useChannels },
+    } = getState()
+    const restChannels = differenceBy(res.data.channels, useChannels, "id")
+
+    dispatch({ type: "home/getAllChannel", payload: restChannels })
   }
 }
 export const getArticleList = (channel_id: number, timestamp: string, type: "append" | "replace"): RootThunkAction => {

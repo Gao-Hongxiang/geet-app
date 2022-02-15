@@ -5,16 +5,23 @@ type HomeState = {
   channelArticles: {
     [key in number]: Articles
   }
+  restChannel: Channel[]
 }
 
 const initialState: HomeState = {
   useChannels: [],
   channelArticles: {},
+  restChannel: [],
 }
 export default function Home(state = initialState, action: HomeAction) {
   switch (action.type) {
     case "home/getUserChannels":
       return { ...state, useChannels: action.payload }
+    case "home/getAllChannel":
+      return {
+        ...state,
+        restChannel: action.payload,
+      }
     case "home/getChannelArticles":
       const {
         data: { pre_timestamp, results },
