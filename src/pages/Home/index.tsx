@@ -30,7 +30,7 @@ const Home = () => {
         <Tabs className="tabs" activeLineMode="fixed" activeKey={channelActiveKey} onChange={onTabChange}>
           {useChannels.map((item) => {
             return (
-              <Tabs.Tab title={item.name} key={item.id}>
+              <Tabs.Tab forceRender title={item.name} key={item.id}>
                 <ArticleList channelId={item.id} />
               </Tabs.Tab>
             )

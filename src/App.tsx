@@ -11,13 +11,17 @@ import Article from "./pages/Article"
 import Search from "./pages/Search"
 import SearchResult from "./pages/Search/Result"
 import "./App.scss"
+import { KeepAlive } from "./components/KeepAlive"
 function App() {
   return (
     <Router history={customHistory}>
       <div className="app">
+        <KeepAlive path="/home">
+          <Layout></Layout>
+        </KeepAlive>
         <Switch>
-          <Route exact path="/" render={() => <Redirect to="/home/index" />} />;
-          <Route path="/home" component={Layout} />
+          <Route exact path="/" render={() => <Redirect to="/home" />} />;
+          {/* <Route path="/home" component={Layout} /> */}
           <Route path="/login" component={Login} />
           <Route path="/chat" component={Chat} />
           <Route path="/articles/:id" component={Article} />

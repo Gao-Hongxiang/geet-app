@@ -10,8 +10,9 @@ import Question from "@/pages/Question"
 import Video from "@/pages/Video"
 import Profile from "@/pages/Profile"
 import { useLocation, useHistory } from "react-router"
+import { KeepAlive } from "@/components/KeepAlive"
 const tabs = [
-  { path: "/home/index", icon: "iconbtn_home", text: "首页" },
+  { path: "/home", icon: "iconbtn_home", text: "首页" },
   { path: "/home/question", icon: "iconbtn_qa", text: "问答" },
   { path: "/home/video", icon: "iconbtn_video", text: "视频" },
   { path: "/home/profile", icon: "iconbtn_mine", text: "我的" },
@@ -35,9 +36,9 @@ const Layout = () => {
           return <Redirect to="/home/index"></Redirect>
         }}
       /> */}
-      <Route exact path="/home/index">
-        <Home></Home>
-      </Route>
+      <KeepAlive exact path="/home">
+        <Home />
+      </KeepAlive>
       <Route path="/home/question">
         <Question></Question>
       </Route>
