@@ -72,7 +72,7 @@ const Login = () => {
             return
           }
 
-          history.replace("/home/index")
+          history.replace("/home")
         },
       })
     } catch (e) {
@@ -86,7 +86,7 @@ const Login = () => {
 
   return (
     <div className={styles.root}>
-      <NavBar onBack={() => history.replace("/home/index")}></NavBar>
+      <NavBar onBack={() => history.replace("/home")}></NavBar>
 
       <div className="login-form">
         <h2 className="title">账号登录</h2>
@@ -95,11 +95,11 @@ const Login = () => {
           form={form}
           validateTrigger={["onBlur"]}
           onFinish={onFinish}
-          // initialValues={{
-          //   // 注意 mobile 是字符串类型！！！
-          //   mobile: "1391111222",
-          //   code: "24681",
-          // }}
+        // initialValues={{
+        //   // 注意 mobile 是字符串类型！！！
+        //   mobile: "1391111222",
+        //   code: "24681",
+        // }}
         >
           <Form.Item
             className="login-item"
